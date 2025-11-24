@@ -51,7 +51,7 @@ A **minimal aesthetics** Hyprland dotfiles collection for Arch Linux. This is a 
 | **WM**            | Hyprland        | Smooth Wayland compositor, minimal yet powerful |
 | **Bar**           | Waybar          | Clean, customizable, no bloat                   |
 | **Launcher**      | Wofi            | Fast, minimal, keyboard-driven                  |
-| **Terminal**      | Kitty           | GPU-accelerated, clean aesthetics               |
+| **Terminal**      | Ghostty           | GPU-accelerated, clean aesthetics               |
 | **Shell**         | Bash + Starship | Simple, fast, beautiful prompt                  |
 | **Notifications** | Dunst           | Unobtrusive, scriptable OSD                     |
 | **Editor**        | Neovim          | Efficient, distraction-free coding              |
@@ -224,7 +224,7 @@ Press **SUPER + K** (or SUPER + /) for an interactive keybinding reference with 
 
 | Binding                 | Action                       | Category  |
 | ----------------------- | ---------------------------- | --------- |
-| `SUPER + T`             | Terminal (Kitty)             | Launch    |
+| `SUPER + T`             | Terminal (Ghostty)             | Launch    |
 | `SUPER + B`             | Browser (Firefox)            | Launch    |
 | `SUPER + A`             | App Launcher (Wofi)          | Launch    |
 | `SUPER + F`             | File Manager (Thunar)        | Launch    |
@@ -408,7 +408,7 @@ systemctl --user status pipewire pipewire-pulse wireplumber
 #### Changing Colors
 
 1. **Waybar**: Edit `~/.config/waybar/style.css`
-2. **Kitty**: Edit `~/.config/kitty/theme.conf`
+2. **Ghostty**: Edit `~/.config/ghostty/config`
 3. **Dunst**: Edit `~/.config/dunst/dunstrc`
 4. **GTK**: Use `nwg-look` (GUI theme manager)
 5. **Qt**: Use `qt6ct` (Qt configuration tool)
@@ -474,7 +474,7 @@ dnsmasq iptables hostapd haveged
 **Applications:**
 
 ```
-kitty neovim
+ghostty neovim
 ```
 
 **Audio Stack:**
