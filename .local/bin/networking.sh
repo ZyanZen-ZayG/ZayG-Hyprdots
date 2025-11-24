@@ -1267,7 +1267,7 @@ while :; do
         ;;
     --connect)
         shift
-        if [[ -n "$1" && "$1" != "--" ]]; then
+        if [[ -n "$1" && "$1" != "--" && ! "$1" =~ ^- ]]; then
             # Check if the next argument looks like a network name (first arg) or interface (if two args)
             # If there's a second non-option argument, treat first as interface, second as network
             local first_arg="$1"
@@ -1390,12 +1390,14 @@ fi
 
 if [[ -n "$LIST_NETWORKS_IFACE" ]]; then
     echo "Scanning for networks on interface '$LIST_NETWORKS_IFACE'..."
+    echo
     iwctl station "$LIST_NETWORKS_IFACE" get-networks
     exit $?
 fi
 
 if [[ -n "$CONNECT_IFACE" ]]; then
     echo "Connecting to network '$CONNECT_NETWORK' on interface '$CONNECT_IFACE'..."
+    echo
     iwctl station "$CONNECT_IFACE" connect "$CONNECT_NETWORK"
     if [[ $? -eq 0 ]]; then
         echo "Connected successfully."
