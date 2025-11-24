@@ -35,7 +35,7 @@ hostapd
 haveged
 
 # Applications
-kitty
+ghostty
 neovim
 
 # Audio/Video
