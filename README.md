@@ -220,6 +220,7 @@ git submodule update --remote --merge
 
 ## Troubleshooting
 
+
 | Problem                     | Solution                                                                 |
 | --------------------------- | ------------------------------------------------------------------------ |
 | Scripts not working         | Verify `~/.local/bin` is in `$PATH`: `echo $PATH`                        |
@@ -227,7 +228,6 @@ git submodule update --remote --merge
 | Keybinding viewer empty     | Run `update-keybindings-json.sh` or press `SUPER + SHIFT + /`           |
 | Battery monitor not running | Check timer: `systemctl --user list-timers battery-monitor.timer`       |
 | Hyprland won't start        | Check logs: `journalctl -b \| grep hyprland`                             |
-
 **Check service status:**
 ```bash
 systemctl --user status pipewire pipewire-pulse wireplumber
