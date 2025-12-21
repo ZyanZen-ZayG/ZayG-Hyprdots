@@ -44,8 +44,8 @@ PS1='[\u@\h \W]\$ '
 # better ls and grep
 alias ls='lsd'
 alias grep='rg --color=auto'
-alias s='~/.local/bin/search.sh'
-alias sc='~/.local/bin/search_by_keyword.sh'
+alias search='~/.local/bin/search.sh'
+alias keyword='~/.local/bin/search_by_keyword.sh'
 
 # networking
 alias hotspot='~/.local/bin/hotspot.sh'
