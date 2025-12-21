@@ -44,7 +44,7 @@
         "interval": 1,
         "rotate": 0,
         "tooltip-format": "<tt>{calendar}</tt>",
-        "on-click": "kitty --class=calendar -e bash -c 'cal -y -m; echo; echo \"Press any key to close...\"; read -n1'",
+        "on-click": "ghostty --class=calendar -e bash -c 'cal -y -m; echo; echo \"Press any key to close...\"; read -n1'",
         "calendar": {
             "mode": "month",
             "mode-mon-col": 3,
