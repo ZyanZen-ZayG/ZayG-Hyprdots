@@ -48,4 +48,5 @@ alias s='~/.local/bin/search.sh'
 alias sc='~/.local/bin/search_by_keyword.sh'
 
 # networking
-alias network='~/.local/bin/networking.sh'
+alias hotspot='~/.local/bin/hotspot.sh'
+alias wifi='~/.local/bin/wifi.sh'
