@@ -33,7 +33,7 @@ A **minimal aesthetics** Hyprland dotfiles collection for Arch Linux. Focused on
 | **File Manager**  | Thunar          |
 
 **Theme**: Catppuccin Mocha everywhere
-**Packages**: 48 official + 8 AUR (see `packages.txt` and `aur-packages.txt`)
+**Packages**: 48 official + 9 AUR (see `packages.txt` and `aur-packages.txt`)
 
 ---
 
@@ -42,11 +42,12 @@ A **minimal aesthetics** Hyprland dotfiles collection for Arch Linux. Focused on
 - **Modular configs** - Hyprland split into 12 files for easy editing
 - **Consistent theming** - Catppuccin Mocha across all components
 - **Wayland-native** - No X11 dependencies
-- **Minimal packages** - Only 56 total packages, every one essential
+- **Minimal packages** - Only 57 total packages, every one essential
 - **Smart battery monitor** - Auto brightness reduction at low battery
 - **GPU-aware recording** - Auto-detects NVIDIA/AMD for optimal codec
 - **Interactive keybindings** - Press `SUPER + /` to view all shortcuts
 - **Advanced networking** - Built-in hotspot and WiFi management
+- **Monitor mirroring** - Physical HDMI mirroring and virtual mirror for screen sharing
 
 ---
 
@@ -92,39 +93,50 @@ Press **`SUPER + /`** for an interactive viewer with fuzzy search.
 
 ### Essential Shortcuts
 
-| Key                     | Action                  |
-| ----------------------- | ----------------------- |
-| `SUPER + T`             | Terminal                |
-| `SUPER + B`             | Browser                 |
-| `SUPER + A`             | App Launcher            |
-| `SUPER + F`             | File Manager            |
-| `SUPER + O`             | Notes (Obsidian)        |
-| `SUPER + Q`             | Kill window             |
-| `SUPER + W`             | Toggle floating         |
-| `SUPER + [1-9]`         | Switch workspace        |
-| `SUPER + SHIFT + [1-9]` | Move window to workspace|
+| Key                     | Action                   |
+| ----------------------- | ------------------------ |
+| `SUPER + T`             | Terminal                 |
+| `SUPER + B`             | Browser                  |
+| `SUPER + A`             | App Launcher             |
+| `SUPER + F`             | File Manager             |
+| `SUPER + O`             | Notes (Obsidian)         |
+| `SUPER + S`             | Android Studio           |
+| `SUPER + Q`             | Kill window              |
+| `SUPER + X`             | Exit Hyprland            |
+| `SUPER + W`             | Toggle floating          |
+| `SUPER + H/J/K/L`       | Move focus (Vim keys)    |
+| `SUPER + [1-9]`         | Switch workspace         |
+| `SUPER + SHIFT + [1-9]` | Move window to workspace |
 
 ### Utilities
 
-| Key                 | Action              |
-| ------------------- | ------------------- |
-| `SUPER + /`         | Keybindings viewer  |
-| `SUPER + E`         | Emoji picker        |
-| `SUPER + V`         | Clipboard history   |
-| `SUPER + M`         | Color picker        |
-| `SUPER + SHIFT + L` | Lock screen         |
-| `SUPER + ESC`       | Logout menu         |
+| Key                  | Action                       |
+| -------------------- | ---------------------------- |
+| `SUPER + /`          | Keybindings viewer           |
+| `SUPER + SHIFT + /`  | Update keybindings JSON      |
+| `SUPER + E`          | Emoji picker                 |
+| `SUPER + V`          | Clipboard history            |
+| `SUPER + M`          | Color picker                 |
+| `SUPER + SHIFT + L`  | Lock screen                  |
+| `SUPER + ESC`        | Logout menu                  |
+| `CTRL + ESC`         | Toggle Waybar                |
+| `SUPER + SHIFT + M`  | Toggle monitor mirror        |
+| `SUPER + CTRL + V`   | Toggle virtual mirror window |
 
 ### Media
 
-| Key                       | Action                           |
-| ------------------------- | -------------------------------- |
-| `SUPER + R`               | Screen record (region + mic)     |
-| `SUPER + SHIFT + R`       | Screen record (full screen + mic)|
-| `Print`                   | Screenshot (full)                |
-| `SUPER + Print`           | Screenshot (window)              |
-| `SUPER + ALT + Print`     | Screenshot (area)                |
-| `XF86 Audio/Brightness`   | Volume/brightness controls       |
+| Key                         | Action                                |
+| --------------------------- | ------------------------------------- |
+| `SUPER + R`                 | Screen record (region + mic)          |
+| `SUPER + SHIFT + R`         | Screen record (full screen + mic)     |
+| `SUPER + ALT + R`           | Screen record (region + system audio) |
+| `SUPER + SHIFT + ALT + R`   | Screen record (full + system audio)   |
+| `SUPER + CTRL + R`          | Screen record (region, no audio)      |
+| `SUPER + CTRL + SHIFT + R`  | Screen record (full, no audio)        |
+| `Print`                     | Screenshot (full)                     |
+| `SUPER + Print`             | Screenshot (window)                   |
+| `SUPER + ALT + Print`       | Screenshot (area)                     |
+| `XF86 Audio/Brightness`     | Volume/brightness controls            |
 
 ---
 
@@ -162,7 +174,9 @@ hyprland.conf      → Main file (sources all below)
 All in `~/.local/bin/`:
 - **Notifications**: `volume-notify.sh`, `brightness-notify.sh`, `capslock-notify.sh`
 - **System**: `bluetooth-toggle.sh`, `screen-record.sh`, `battery-monitor.sh`
-- **Workflow**: `show-keybindings.sh`, `search_by_keyword.sh`
+- **Display**: `monitor-mirror-toggle.sh`, `virtual-mirror-toggle.sh`
+- **Workflow**: `show-keybindings.sh`, `update-keybindings-json.sh`, `search_by_keyword.sh`, `search.sh`
+- **Media**: `record-audio.sh`
 - **Networking**: `hotspot.sh`, `wifi.sh`
 
 ---
@@ -170,7 +184,7 @@ All in `~/.local/bin/`:
 ## Packages
 
 **Official** (48): See `packages.txt`
-**AUR** (8): See `aur-packages.txt`
+**AUR** (9): See `aur-packages.txt`
 
 Key packages:
 - Hyprland ecosystem: `hyprland`, `hyprpaper`, `hyprlock`, `hypridle`, `hyprpicker`
