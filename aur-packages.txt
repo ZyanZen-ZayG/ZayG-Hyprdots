@@ -2,6 +2,7 @@
 grimblast-git
 wlogout
 wl-screenrec
+wl-mirror
 catppuccin-gtk-theme-mocha
 catppuccin-cursors-mocha
 papirus-folder-catppuccin-git

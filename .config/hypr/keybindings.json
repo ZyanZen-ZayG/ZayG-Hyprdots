@@ -105,6 +105,20 @@
   }
 ,
   {
+    "key": "M",
+    "modifiers": "SUPERSHIFT",
+    "action": "exec, ~/.local/bin/monitor-mirror-toggle.sh",
+    "description": "exec, ~/.local/bin/monitor-mirror-toggle.sh"
+  }
+,
+  {
+    "key": "V",
+    "modifiers": "SUPERCTRL",
+    "action": "exec, ~/.local/bin/virtual-mirror-toggle.sh",
+    "description": "exec, ~/.local/bin/virtual-mirror-toggle.sh"
+  }
+,
+  {
     "key": "J",
     "modifiers": "SUPERSHIFT",
     "action": "togglesplit, # dwindle",

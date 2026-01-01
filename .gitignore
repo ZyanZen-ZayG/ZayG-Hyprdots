@@ -22,3 +22,7 @@ Thumbs.db
 *.log
 CLAUDE.md
 GEMINI.md
+.local/bin/env
+.local/bin/env.fish
+.local/bin/uv
+.local/bin/uvx
