@@ -43,10 +43,6 @@ fi
 echo -e "${GREEN}Using AUR helper: $AUR_HELPER${NC}"
 echo ""
 
-# Initialize git submodules (for neovim config)
-echo -e "${YELLOW}Initializing git submodules...${NC}"
-git submodule update --init --recursive
-
 # Install official packages
 echo -e "${YELLOW}Installing official packages...${NC}"
 if [ -f "$DOTFILES_DIR/packages.txt" ]; then
@@ -159,6 +155,8 @@ fi
 
 mkdir ~/Videos
 mkdir ~/Pictures
+
+echo "source ~/.local/bin/bashrc.sh" >> ~/.bashrc
 
 echo ""
 echo -e "${GREEN}======================================"
