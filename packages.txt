@@ -25,6 +25,7 @@ bluez
 bluez-utils
 libnotify
 thunar
+gvfs
 unzip
 zip
 
