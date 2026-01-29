@@ -5,6 +5,7 @@ hyprlock
 hypridle
 hyprpicker
 hyprpolkitagent
+hyprshot
 
 # UI/Menu/Status
 waybar
