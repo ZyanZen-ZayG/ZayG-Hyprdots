@@ -1,7 +1,5 @@
 # hyprsimple
 
-> Clean. Basic. No Fancy. Everything you need.
-
 A **minimal aesthetics** Hyprland dotfiles collection for Arch Linux. Focused on **simplicity, beauty, and productivity** — stripped down to essentials, refined for daily use.
 
 **Philosophy**: Every element serves a purpose. No unnecessary widgets, no distracting animations, no visual noise. Just a clean, functional workspace that gets out of your way.
@@ -188,78 +186,16 @@ All in `~/.local/bin/`:
 
 Key packages:
 - Hyprland ecosystem: `hyprland`, `hyprpaper`, `hyprlock`, `hypridle`, `hyprpicker`
-- UI: `waybar`, `dunst`, `wofi`
+- UI: `waybar`, `dunst`, `rofi`
 - Audio: `pipewire`, `pipewire-pulse`, `wireplumber`
 - CLI tools: `fzf`, `zoxide`, `starship`, `ripgrep`, `lazygit`
 - Theme: `catppuccin-gtk-theme-mocha`, `catppuccin-cursors-mocha`
 
 ---
 
-## Maintenance
-
-### Updating Configs
-
-**If you used `install.sh`** (files copied):
-```bash
-# Edit files in ~/.config/ directly
-nvim ~/.config/hypr/binding.conf
-hyprctl reload
-```
-
-**If you used `dev-install.sh`** (files symlinked):
-```bash
-# Edit files in the repo
-cd ~/path/to/hyprsimple
-nvim .config/hypr/binding.conf
-hyprctl reload
-git commit -am "Update config"
-```
-
-### Updating from Repo
-
-```bash
-cd ~/path/to/hyprsimple
-git pull
-./install.sh  # Re-run to update (creates backups)
-```
-
-### Updating Neovim Config
-
-```bash
-cd ~/path/to/hyprsimple
-git submodule update --remote --merge
-```
-
----
-
-## Troubleshooting
-
-
-| Problem                     | Solution                                                                 |
-| --------------------------- | ------------------------------------------------------------------------ |
-| Scripts not working         | Verify `~/.local/bin` is in `$PATH`: `echo $PATH`                        |
-| No audio                    | Enable PipeWire: `systemctl --user enable --now pipewire pipewire-pulse wireplumber` |
-| Keybinding viewer empty     | Run `update-keybindings-json.sh` or press `SUPER + SHIFT + /`           |
-| Battery monitor not running | Check timer: `systemctl --user list-timers battery-monitor.timer`       |
-| Hyprland won't start        | Check logs: `journalctl -b \| grep hyprland`                             |
-**Check service status:**
-```bash
-systemctl --user status pipewire pipewire-pulse wireplumber
-systemctl --user list-timers
-```
-
-**Reload everything:**
-```bash
-hyprctl reload
-pkill waybar && waybar &
-systemctl --user daemon-reload
-```
-
----
-
 ## Contributing
 
-This is a **personal configuration**, but suggestions are welcome!
+Contribution are welcome
 
 - Report issues or suggest improvements via GitHub Issues
 - Submit PRs with improvements
@@ -273,6 +209,3 @@ This is a **personal configuration**, but suggestions are welcome!
 
 **MIT License** - Use, modify, and share freely.
 
----
-
-**Note**: Neovim config is a separate submodule from [rrxxyz/nvim-minimal](https://github.com/rrxxyz/nvim-minimal)

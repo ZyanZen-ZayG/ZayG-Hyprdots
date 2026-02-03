@@ -10,7 +10,8 @@ hyprshot
 # UI/Menu/Status
 waybar
 dunst
-wofi
+rofi
+papirus-icon-theme
 
 # Screenshots & Screen tools
 slurp
@@ -25,7 +26,7 @@ brightnessctl
 bluez
 bluez-utils
 libnotify
-thunar
+nautilus
 gvfs
 unzip
 zip
@@ -48,6 +49,7 @@ pipewire-pulse
 wireplumber
 alsa-utils
 ffmpeg
+swayimg
 
 # CLI Tools
 fzf
