@@ -161,6 +161,13 @@ mkdir -p ~/Pictures
 
 echo "source ~/.local/bin/bashrc.sh" >> ~/.bashrc
 
+source ~/.bashrc
+hyprctl reload
+if pgrep -x waybar > /dev/null; then
+  pkill waybar
+fi
+waybar &
+
 echo ""
 echo -e "${GREEN}======================================"
 echo "  Installation Complete!"
@@ -174,3 +181,12 @@ echo "1. Log out and log back in to Hyprland"
 echo "2. Customize ~/.config/hypr/monitors.conf for your setup"
 echo "3. Done"
 echo ""
+
+read -p "Logout to take effect? (y/n) " logout
+if [ "$logout" == "y" ]; then
+    echo "Logging out..."
+    exit
+else
+    echo "Exiting..."
+    exit
+fi
