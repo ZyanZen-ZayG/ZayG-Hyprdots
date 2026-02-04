@@ -1,5 +1,5 @@
 dir="$HOME/.config/rofi/launcher"
-theme='styles/style-1'
+theme='styles/style-6'
 
 ## Run
 rofi \

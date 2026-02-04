@@ -1,60 +1,76 @@
+@import "mocha.css";
+
 * {
-    border: none;
-    font-family: JetBrainsMono Nerd Font, monospace;
-    font-weight: 600;
-    font-size: 13px;
-    min-height: 0;
-    background: #1e1e2e;
+  font-family: JetBrainsMono Nerd Font, monospace;
+  font-size: 15px;
+  background-color: @base;
+  min-height: 0;
 }
 
-window#waybar {
-    background: rgba(21, 18, 27, 0);
-    color: #cdd6f4;
+#waybar {
+  background: transparent;
+  color: @text;
+  margin: 5px 5px;
 }
 
-
-/* Remove individual item backgrounds */
-#workspaces button,
-#window,
-#clock,
-#battery,
-#pulseaudio,
-#network,
-#cpu,
-#memory,
-#tray,
-#backlight {
-    background: transparent;
-    margin: 0;
-    padding: 0 8px;
-    border-radius: 0;
-}
-
-/* Workspaces refinement */
-#workspaces {
-    padding: 0 6px;
-    margin: 0;
-}
 
 #workspaces button {
-    color: #6c7086;
-    padding: 4px 8px;
-    margin: 0 2px;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
+  color: @lavender;
+  padding: 0.4rem;
 }
 
-#workspaces button.active,
-#workspaces button.focused {
-    color: #cdd6f4;
-}
-
-#workspaces button.urgent {
-    color: #11111b;
-    background: #f38ba8;
+#workspaces button.active {
+  color: @sky;
+  border-radius: 1rem;
 }
 
 #workspaces button:hover {
-    background: #45475a;
-    color: #cdd6f4;
+  color: @sapphire;
 }
+
+#clock,
+#tray,
+#backlight,
+#battery,
+#pulseaudio,
+#custom-power {
+  padding: 0.2rem 0.5rem;
+}
+
+#clock {
+  color: @blue;
+}
+
+#battery {
+  color: @green;
+}
+
+#battery.charging {
+  color: @green;
+}
+
+#battery.warning:not(.charging) {
+  color: @red;
+}
+
+#backlight {
+  color: @yellow;
+}
+
+#backlight, #battery {
+    border-radius: 0;
+}
+
+#pulseaudio {
+  color: @maroon;
+}
+
+
+#pulseaudio.microphone {
+  color: @blue;
+}
+
+#custom-power {
+    color: @red;
+}
+
