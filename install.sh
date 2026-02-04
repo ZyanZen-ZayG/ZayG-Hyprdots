@@ -153,8 +153,8 @@ if command -v bluetoothctl &>/dev/null; then
   sudo systemctl start bluetooth
 fi
 
-mkdir ~/Videos
-mkdir ~/Pictures
+mkdir -p ~/Videos
+mkdir -p ~/Pictures
 
 echo "source ~/.local/bin/bashrc.sh" >> ~/.bashrc
 
@@ -165,8 +165,6 @@ echo "======================================${NC}"
 echo ""
 echo "Configuration files have been copied to your home directory."
 echo "To update configs, edit files in ~/.config/ directly."
-echo ""
-echo "For developers: Use ./dev-install.sh to symlink configs instead."
 echo ""
 echo "Next steps:"
 echo "1. Log out and log back in to Hyprland"
