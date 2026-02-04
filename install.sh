@@ -71,7 +71,7 @@ backup_if_exists() {
   if [ -e "$1" ] && [ ! -L "$1" ]; then
     echo -e "${YELLOW}Backing up existing $1 to $1.backup${NC}"
     if [ -e "$1.backup" ]; then
-      rm "$1.backup"
+      rm -rf "$1.backup"
     fi
     mv "$1" "$1.backup"
   fi
