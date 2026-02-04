@@ -189,7 +189,7 @@ echo ""
 read -p "Logout to take effect? (y/n) " logout
 if [ "$logout" == "y" ]; then
     echo "Logging out..."
-    exit
+    hyprctl dispatch exit
 else
     echo "Exiting..."
     exit
