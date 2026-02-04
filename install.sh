@@ -165,8 +165,12 @@ source ~/.bashrc
 hyprctl reload
 if pgrep -x waybar > /dev/null; then
   pkill waybar
+  sleep 1
 fi
-waybar &
+nohup waybar > /dev/null 2>&1 &
+disown
+echo -e "${YELLOW}Starting waybar...${NC}"
+sleep 3
 
 echo ""
 echo -e "${GREEN}======================================"
