@@ -70,6 +70,11 @@
   color: @blue;
 }
 
+#network {
+    color: @lavender;
+    padding: 0.2rem 0.5rem;
+}
+
 #custom-power {
     color: @red;
 }
