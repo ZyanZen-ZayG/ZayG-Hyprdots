@@ -11,8 +11,8 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "launcher/color.rasi"
-@import                          "launcher/font.rasi"
+@import                          "shared/colors/color.rasi"
+@import                          "shared/font.rasi"
 
 /*****----- Main Window -----*****/
 window {
@@ -44,7 +44,7 @@ mainbox {
 imagebox {
     padding:                     10px;
     background-color:            transparent;
-    background-image:            url("~/.config/rofi/launcher/images/wallpaper3.jpg", height);
+    background-image:            url("~/.config/rofi/shared/images/image1.jpg", height);
     orientation:                 vertical;
     children:                    [ "inputbar", "dummy", "mode-switcher" ];
 }

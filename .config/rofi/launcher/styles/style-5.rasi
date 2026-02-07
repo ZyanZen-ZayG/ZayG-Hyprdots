@@ -8,8 +8,8 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "launcher/color.rasi"
-@import                          "launcher/font.rasi"
+@import                          "shared/colors/color.rasi"
+@import                          "shared/font.rasi"
 
 /*****----- Main Window -----*****/
 window {

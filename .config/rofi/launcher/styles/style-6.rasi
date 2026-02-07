@@ -20,8 +20,8 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "launcher/color.rasi"
-@import                          "launcher/font.rasi"
+@import                          "shared/colors/color.rasi"
+@import                          "shared/font.rasi"
 
 /*****----- Main Window -----*****/
 window {
@@ -64,7 +64,7 @@ inputbar {
     spacing:                     10px;
     padding:                     100px 60px;
     background-color:            transparent;
-    background-image:            url("~/.config/rofi/launcher/images/wallpaper3.jpg", width);
+    background-image:            url("~/.config/rofi/shared/images/image1.jpg", width);
     text-color:                  @foreground;
     orientation:                 horizontal;
     children:                    [ "textbox-prompt-colon", "entry", "dummy", "mode-switcher" ];
