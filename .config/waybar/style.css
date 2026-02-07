@@ -28,6 +28,8 @@
   color: @sapphire;
 }
 
+#network
+#bluetooth
 #clock,
 #tray,
 #backlight,
@@ -72,7 +74,10 @@
 
 #network {
     color: @lavender;
-    padding: 0.2rem 0.5rem;
+}
+
+#bluetooth {
+    color: @blue;
 }
 
 #custom-power {
