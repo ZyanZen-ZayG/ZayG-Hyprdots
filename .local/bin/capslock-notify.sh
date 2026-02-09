@@ -1,21 +1,32 @@
 #!/bin/bash
 
-# Track previous state
-previous_state=""
+# Find capslock LED sysfs path
+CAPS_LED=""
+for led in /sys/class/leds/input*::capslock; do
+  [ -r "$led/brightness" ] && CAPS_LED="$led/brightness" && break
+done
 
-# Function to check capslock state
-check_capslock() {
-  hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .capsLock'
-}
+if [ -z "$CAPS_LED" ]; then
+  echo "No capslock LED found in sysfs, falling back to hyprctl" >&2
+  check_capslock() {
+    hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .capsLock'
+  }
+  read_state() { check_capslock; }
+else
+  read_state() {
+    local val
+    read -r val < "$CAPS_LED"
+    [ "$val" = "1" ] && echo "true" || echo "false"
+  }
+fi
 
 # Initialize state
-previous_state=$(check_capslock)
+previous_state=$(read_state)
 
 # Poll for capslock state changes
 while true; do
-  current_state=$(check_capslock)
+  current_state=$(read_state)
 
-  # Only notify if state changed
   if [ "$current_state" != "$previous_state" ]; then
     if [ "$current_state" = "true" ]; then
       dunstify -u normal -t 2000 "Caps Lock" "ON"
@@ -25,5 +36,5 @@ while true; do
     previous_state="$current_state"
   fi
 
-  sleep 0.1
+  sleep 0.5
 done
