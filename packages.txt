@@ -18,7 +18,6 @@ slurp
 wf-recorder
 
 # System utilities
-polkit-kde-agent
 cliphist
 wl-clipboard
 playerctl
