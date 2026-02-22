@@ -5,15 +5,11 @@ palette = 'catppuccin_mocha'
 
 format = """
 [╭](gray)\
-[](bg0)\
 $os\
 $username\
-[](fg:bg0 bg:bg1)\
 $directory\
-[](fg:bg1 bg:bg2)\
 $git_branch\
 $git_status\
-[](fg:bg2 bg:bg3)\
 $c\
 $cpp\
 $elixir\
@@ -30,13 +26,10 @@ $php\
 $python\
 $rust\
 $scala\
-[](fg:bg3 bg:bg4)\
 $conda\
 $docker_context\
 $pixi\
-[](fg:bg4 bg:bg5)\
 $time\
-[](fg:bg5)\
 $cmd_duration\
 $line_break\
 [╰](gray)\
@@ -46,43 +39,20 @@ $character
 [username]
 disabled = false
 show_always = true
-style_user = "bg:bg0 fg:text"
-style_root = "bg:bg0 fg:text"
 # symbol = "󰀄"
 format = '[$user ]($style)'
 
 [os]
 disabled = false
-style = "bg:bg0 fg:text"
 
 [os.symbols]
-Windows = "  "
-Ubuntu = " 󰕈 "
-SUSE = "  "
-Raspbian = " 󰐿 "
-Mint = " 󰣭 "
-Macos = " 󰀵 "
-Manjaro = "  "
-Linux = " 󰌽 "
-Gentoo = " 󰣨 "
-Fedora = " 󰣛 "
-Alpine = "  "
-Amazon = "  "
-Android = "  "
 Arch = " 󰣇 "
-Artix = " 󰣇 "
-CentOS = "  "
-Debian = " 󰣚 "
-Redhat = " 󱄛 "
-RedHatEnterprise = " 󱄛 "
 
 [directory]
 disabled = false
-style = "bg:bg1 fg:text"
 # home_symbol = ""
 format = "[  $path ]($style)"
 truncation_length = 3
-truncation_symbol = "…/"
 
 # Shorten some long paths by text replacement
 # similar to mapped_locations in Oh My Posh:
@@ -105,7 +75,6 @@ truncation_symbol = "…/"
 [time]
 disabled = false
 time_format = "%R"
-style = "bg:bg5 fg:text"
 format = '[  $time ]($style)'
 
 [cmd_duration]
@@ -122,121 +91,99 @@ error_symbol = '[❯](bold fg:red)'
 
 [git_branch]
 symbol = ""
-style = "bg:bg2 fg:text"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-disabled = false
-# ahead = " $count "
-# behind = " $count "
-# deleted = "﫧 $count "
-# diverged = " $count "
-# stashed = " $count "
-# modified = " $count "
-# staged = " $count "
-# renamed = " $count "
-# untracked = " $count "
-style = "bg:bg2 fg:text"
+disabled = true
+ahead = " $count "
+behind = " $count "
+deleted = "﫧 $count "
+diverged = " $count "
+stashed = " $count "
+modified = " $count "
+staged = " $count "
+renamed = " $count "
+untracked = " $count "
 format = '[($all_status$ahead_behind)]($style)'
 
 [lua]
 symbol = ""
-style = "bg:bg4 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [conda]
 symbol = ""
-style = "bg:bg4 fg:text"
 format = '[ $symbol ($environment) ]($style)'
 ignore_base = false
 
 [docker_context]
 symbol = ""
-style = "bg:bg4 fg:text"
 format = '[ $symbol ($context) ]($style)'
 
 [pixi]
-style = "bg:bg4 fg:text"
 format = '[ $symbol ($version) ($environment) ]($style)'
 
 [c]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [cpp]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [elixir]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [elm]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [golang]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [gradle]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [haskell]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [java]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [julia]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [kotlin]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [nodejs]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [nim]
 symbol = "󰆥"
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [php]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [python]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ($virtualenv) ]($style)'
 
 [rust]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [scala]
 symbol = ""
-style = "bg:bg3 fg:text"
 format = '[ $symbol ($version) ]($style)'
 
 [palettes.pastel]

@@ -1,22 +1,25 @@
 @import "mocha.css";
 
 * {
-  font-family: JetBrainsMono Nerd Font, monospace;
-  font-size: 15px;
-  background-color: @base;
+  font-family: JetbrainsMono Nerd Font;
+  font-size: 14px;
   min-height: 0;
 }
 
 #waybar {
   background: transparent;
   color: @text;
-  margin: 5px 5px;
 }
 
+#workspaces {
+  border-radius: 1rem;
+  background-color: @surface0;
+  margin: 5px 0 0 1rem;
+}
 
 #workspaces button {
   color: @lavender;
-  padding: 0.4rem;
+  border-radius: 1rem;
 }
 
 #workspaces button.active {
@@ -26,25 +29,73 @@
 
 #workspaces button:hover {
   color: @sapphire;
+  border-radius: 1rem;
 }
 
-#network
-#bluetooth
-#clock,
+#network,
+#bluetooth {
+    background-color: @surface0;
+    padding: 0.5rem 0.5rem;
+    margin: 5px 0 0 0;
+}
+
+
+#cpu,
+#memory {
+    background-color: @surface0;
+    padding: 0.5rem 0.5rem;
+    margin: 5px 0 0 0;
+}
+
 #tray,
 #backlight,
+#clock,
 #battery,
+#pulseaudio.microphone,
 #pulseaudio,
+#custom-lock,
 #custom-power {
-  padding: 0.2rem 0.5rem;
+  background-color: @surface0;
+  padding: 0.5rem 0.5rem;
+  margin: 5px 0 0 0;
 }
 
 #clock {
   color: @blue;
+  border-radius: 0px 1rem 1rem 0px;
+  margin-right: 1rem;
+  padding-right: 1rem;
+}
+
+#bluetooth {
+  color: @blue;
+  border-radius: 0px 1rem 1rem 0px;
+  padding-right: 1rem;
+}
+
+#network {
+  color: @green;
+  border-radius: 1rem 0px 0px 1rem;
+  padding-left: 1rem;
+
 }
 
 #battery {
   color: @green;
+}
+
+#cpu {
+  color: @lavender;
+  border-radius: 1rem 0px 0px 1rem;
+  padding-left: 1rem;
+  margin-left: 1rem;
+}
+
+#memory {
+  color: @flamingo;
+  border-radius: 0px 1rem 1rem 0px;
+  padding-right: 1rem;
+  margin-right: 1rem;
 }
 
 #battery.charging {
@@ -59,28 +110,35 @@
   color: @yellow;
 }
 
-#backlight, #battery {
+#pulseaudio.microphone {
+  color: @maroon;
+}
+
+#backlight, #battery, #pulseaudio.microphone {
     border-radius: 0;
 }
 
 #pulseaudio {
   color: @maroon;
+  border-radius: 1rem 0px 0px 1rem;
+  margin-left: 1rem;
+  padding-left: 1rem;
 }
 
-
-#pulseaudio.microphone {
-  color: @blue;
-}
-
-#network {
+#custom-lock {
+    border-radius: 1rem 0px 0px 1rem;
     color: @lavender;
-}
-
-#bluetooth {
-    color: @blue;
+    padding-left: 1rem;
 }
 
 #custom-power {
+    margin-right: 1rem;
+    padding-right: 1rem;
+    border-radius: 0px 1rem 1rem 0px;
     color: @red;
 }
 
+#tray {
+  margin-right: 1rem;
+  border-radius: 1rem;
+}
