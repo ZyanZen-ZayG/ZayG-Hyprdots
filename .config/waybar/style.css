@@ -32,6 +32,23 @@
   border-radius: 1rem;
 }
 
+#custom-muslimtify {
+    background-color: @surface0;
+    color: @yellow;
+    border: 1.5px solid alpha(@yellow, 0.35);
+    border-radius: 1.5rem 1.5rem 0.3rem 0.3rem;
+    padding: 0.4rem 1.2rem;
+    margin: 5px 0 0 1rem;
+    text-shadow: 0 0 4px alpha(@yellow, 0.25);
+    box-shadow: inset 0 1px 0 alpha(@yellow, 0.08), 0 1px 3px alpha(@crust, 0.6);
+}
+
+#custom-muslimtify:hover {
+    background-color: shade(@crust, 1.3);
+    border-color: @yellow;
+    text-shadow: 0 0 8px alpha(@yellow, 0.5);
+}
+
 #network,
 #bluetooth {
     background-color: @surface0;

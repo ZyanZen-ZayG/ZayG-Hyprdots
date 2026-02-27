@@ -3,7 +3,7 @@
     "position": "top", // Waybar position (top|bottom|left|right)
     // "width": 1280, // Waybar width
     // Choose the order of the modules
-    "modules-left": ["hyprland/workspaces"],
+    "modules-left": ["hyprland/workspaces", "custom/muslimtify"],
     "modules-center": ["hyprland/window"],
     "modules-right": ["cpu", "memory", "network", "bluetooth", "pulseaudio","pulseaudio#microphone", "backlight", "battery", "clock", "tray", "custom/lock", "custom/power"],
     "hyprland/workspaces": {
@@ -123,6 +123,12 @@
         "tooltip": false,
         "on-click": "hyprlock",
         "format": "",
+    },
+    "custom/muslimtify": {
+        "exec": "~/.local/bin/waybar-muslimtify.sh",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true
     },
     "custom/power": {
         "tooltip": false,
