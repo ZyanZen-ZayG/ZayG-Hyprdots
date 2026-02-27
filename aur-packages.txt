@@ -1,7 +1,7 @@
 # AUR Packages
-grimblast-git
 wlogout
 wl-screenrec
 wl-mirror
 papirus-folder-catppuccin-git
 nwg-look
+muslimtify

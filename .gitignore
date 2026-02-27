@@ -26,3 +26,4 @@ GEMINI.md
 .local/bin/env.fish
 .local/bin/uv
 .local/bin/uvx
+/.local/bin/claude
