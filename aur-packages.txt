@@ -5,3 +5,6 @@ wl-mirror
 papirus-folder-catppuccin-git
 nwg-look
 muslimtify
+copr-cli
+rpm-tools
+imagemagick
