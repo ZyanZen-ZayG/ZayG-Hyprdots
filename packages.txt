@@ -30,6 +30,7 @@ gvfs
 unzip
 zip
 cpupower
+debootstrap
 
 # networking
 dnsmasq
