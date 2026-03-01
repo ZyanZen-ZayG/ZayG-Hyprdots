@@ -55,6 +55,7 @@ swayimg
 # CLI Tools
 fzf
 zoxide
+yazi
 starship
 fastfetch
 lsd
