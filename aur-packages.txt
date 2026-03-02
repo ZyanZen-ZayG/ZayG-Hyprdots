@@ -8,3 +8,4 @@ muslimtify
 copr-cli
 rpm-tools
 imagemagick
+dput-ng
