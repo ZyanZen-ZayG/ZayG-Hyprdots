@@ -172,6 +172,9 @@ disown
 echo -e "${YELLOW}Starting waybar...${NC}"
 sleep 3
 
+systemctl --user enable --now hyprpaper.service
+systemctl --user enable --now hyprpolkitagent.service
+
 echo ""
 echo -e "${GREEN}======================================"
 echo "  Installation Complete!"

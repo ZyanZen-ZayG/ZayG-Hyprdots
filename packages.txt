@@ -28,6 +28,7 @@ libnotify
 nautilus
 gvfs
 unzip
+libusb
 zip
 cpupower
 debootstrap
