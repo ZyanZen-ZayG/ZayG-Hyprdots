@@ -9,3 +9,4 @@ copr-cli
 rpm-tools
 imagemagick
 dput-ng
+hyprshutdown
