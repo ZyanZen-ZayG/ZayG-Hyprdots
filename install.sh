@@ -174,6 +174,8 @@ sleep 3
 
 systemctl --user enable --now hyprpaper.service
 systemctl --user enable --now hyprpolkitagent.service
+muslimtify daemon install
+muslimtify daemon status
 
 echo ""
 echo -e "${GREEN}======================================"
