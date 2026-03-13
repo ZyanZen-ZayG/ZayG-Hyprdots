@@ -11,7 +11,8 @@ hyprshot
 waybar
 dunst
 rofi
-papirus-icon-theme
+lxappearance
+nwg-look
 
 # Screenshots & Screen tools
 slurp

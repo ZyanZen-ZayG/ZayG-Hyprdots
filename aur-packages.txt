@@ -10,3 +10,4 @@ rpm-tools
 imagemagick
 dput-ng
 hyprshutdown
+hyprqt6engine
