@@ -7,6 +7,7 @@ hyprpicker
 hyprpolkitagent
 hyprshot
 hyprqt6engine
+xdg-desktop-portal-hyprland
 
 # UI/Menu/Status
 waybar
@@ -35,6 +36,8 @@ zip
 cpupower
 debootstrap
 btop
+qt5-wayland
+qt6-wayland
 
 # networking
 dnsmasq
