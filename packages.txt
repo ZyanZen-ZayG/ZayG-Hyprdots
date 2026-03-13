@@ -6,12 +6,14 @@ hypridle
 hyprpicker
 hyprpolkitagent
 hyprshot
+hyprqt6engine
 
 # UI/Menu/Status
 waybar
 dunst
 rofi
-papirus-icon-theme
+lxappearance
+nwg-look
 
 # Screenshots & Screen tools
 slurp
