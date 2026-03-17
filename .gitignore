@@ -27,3 +27,5 @@ GEMINI.md
 .local/bin/uv
 .local/bin/uvx
 /.local/bin/claude
+external/
+docs/
