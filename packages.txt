@@ -6,14 +6,13 @@ hypridle
 hyprpicker
 hyprpolkitagent
 hyprshot
-hyprqt6engine
+hyprsunset
 xdg-desktop-portal-hyprland
 
 # UI/Menu/Status
 waybar
 dunst
 rofi
-lxappearance
 nwg-look
 
 # Screenshots & Screen tools
@@ -34,8 +33,8 @@ unzip
 libusb
 zip
 cpupower
-debootstrap
 btop
+power-profiles-daemon
 qt5-wayland
 qt6-wayland
 
@@ -49,6 +48,7 @@ ufw
 # Applications
 ghostty
 neovim
+firefox
 
 # Audio/Video
 pipewire
