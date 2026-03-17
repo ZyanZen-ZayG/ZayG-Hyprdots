@@ -1,62 +1,35 @@
 # hyprsimple
 
-A **minimal aesthetics** Hyprland dotfiles collection for Arch Linux. Focused on **simplicity, beauty, and productivity** — stripped down to essentials, refined for daily use.
-
-**Philosophy**: Every element serves a purpose. No unnecessary widgets, no distracting animations, no visual noise. Just a clean, functional workspace that gets out of your way.
-
----
+Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 
 ## Preview
 
 ![Screenshot 1](assets/image1.png)
 ![Screenshot 2](assets/image2.png)
-![Screenshot 3](assets/image3.png)
-![Screenshot 4](assets/image4.png)
-![Screenshot 5](assets/image5.png)
 
----
+## Stack
 
-## Core Stack
-
-| Component         | Choice          |
-| ----------------- | --------------- |
-| **WM**            | Hyprland        |
-| **Bar**           | Waybar          |
-| **Launcher**      | Wofi            |
-| **Terminal**      | Ghostty         |
-| **Shell**         | Bash + Starship |
-| **Notifications** | Dunst           |
-| **Editor**        | Neovim          |
-| **Browser**       | Firefox         |
-| **File Manager**  | Thunar          |
-
-**Theme**: Catppuccin Mocha everywhere
-**Packages**: 48 official + 9 AUR (see `packages.txt` and `aur-packages.txt`)
-
----
+| Component | Choice |
+|-----------|--------|
+| WM | Hyprland |
+| Bar | Waybar |
+| Launcher | Rofi |
+| Terminal | Ghostty |
+| Shell | Bash + Starship |
+| Notifications | Dunst |
+| Editor | Neovim |
+| Browser | Firefox |
 
 ## Features
 
-- **Modular configs** - Hyprland split into 12 files for easy editing
-- **Consistent theming** - Catppuccin Mocha across all components
-- **Wayland-native** - No X11 dependencies
-- **Minimal packages** - Only 57 total packages, every one essential
-- **Smart battery monitor** - Auto brightness reduction at low battery
-- **GPU-aware recording** - Auto-detects NVIDIA/AMD for optimal codec
-- **Interactive keybindings** - Press `SUPER + /` to view all shortcuts
-- **Advanced networking** - Built-in hotspot and WiFi management
-- **Monitor mirroring** - Physical HDMI mirroring and virtual mirror for screen sharing
+- **17 themes** with one-command switching (`SUPER + SHIFT + T`)
+- **Hardware auto-detection** — NVIDIA, Vulkan, Intel iGPU configured at install
+- **Modular configs** — Hyprland split into focused files
+- **Wayland-native** — no X11 dependencies
+- **Smart battery** — auto brightness + power profiles
+- **Firewall** — UFW configured out of the box
 
----
-
-## Installation
-
-### Requirements
-- Arch Linux
-- base-devel installed
-- git installed
-
-### For Users (Stable)
+## Install
 
 ```bash
 git clone https://github.com/rizukirr/hyprsimple.git
@@ -64,148 +37,32 @@ cd hyprsimple
 ./install.sh
 ```
 
-**Copies** all files to `~/.config/`, `~/.local/bin/`, etc. Your configs become independent from the repo.
-
-### For Developers (Live Editing)
-
-```bash
-git clone https://github.com/rizukirr/hyprsimple.git
-cd hyprsimple
-./dev-install.sh
-```
-
-**Symlinks** most files (except machine-specific ones). Changes in repo immediately affect your system.
-
-### Post-Installation
-
-1. Log out and select **Hyprland** from your display manager
-2. Customize display: `nvim ~/.config/hypr/monitors.conf`
-3. Set wallpaper: `nvim ~/.config/hypr/hyprpaper.conf`
-4. Press `SUPER + /` to view keybindings
-
----
+Then log out and select Hyprland.
 
 ## Keybindings
 
-Press **`SUPER + /`** for an interactive viewer with fuzzy search.
+Press **`SUPER + /`** for interactive viewer.
 
-### Essential Shortcuts
+| Key | Action |
+|-----|--------|
+| `SUPER + T` | Terminal |
+| `SUPER + B` | Browser |
+| `SUPER + A` | App Launcher |
+| `SUPER + F` | File Manager |
+| `SUPER + Q` | Kill window |
+| `SUPER + H/J/K/L` | Move focus (Vim) |
+| `SUPER + [1-9]` | Switch workspace |
+| `SUPER + SHIFT + T` | Switch theme |
+| `SUPER + V` | Clipboard history |
+| `SUPER + R` | Screen record |
+| `Print` | Screenshot |
 
-| Key                     | Action                   |
-| ----------------------- | ------------------------ |
-| `SUPER + T`             | Terminal                 |
-| `SUPER + B`             | Browser                  |
-| `SUPER + A`             | App Launcher             |
-| `SUPER + F`             | File Manager             |
-| `SUPER + O`             | Notes (Obsidian)         |
-| `SUPER + S`             | Android Studio           |
-| `SUPER + Q`             | Kill window              |
-| `SUPER + X`             | Exit Hyprland            |
-| `SUPER + W`             | Toggle floating          |
-| `SUPER + H/J/K/L`       | Move focus (Vim keys)    |
-| `SUPER + [1-9]`         | Switch workspace         |
-| `SUPER + SHIFT + [1-9]` | Move window to workspace |
+## Themes
 
-### Utilities
+17 built-in themes. Switch with `SUPER + SHIFT + T` or run `theme-switcher.sh`.
 
-| Key                  | Action                       |
-| -------------------- | ---------------------------- |
-| `SUPER + /`          | Keybindings viewer           |
-| `SUPER + SHIFT + /`  | Update keybindings JSON      |
-| `SUPER + E`          | Emoji picker                 |
-| `SUPER + V`          | Clipboard history            |
-| `SUPER + M`          | Color picker                 |
-| `SUPER + SHIFT + L`  | Lock screen                  |
-| `SUPER + ESC`        | Logout menu                  |
-| `CTRL + ESC`         | Toggle Waybar                |
-| `SUPER + SHIFT + M`  | Toggle monitor mirror        |
-| `SUPER + CTRL + V`   | Toggle virtual mirror window |
-
-### Media
-
-| Key                         | Action                                |
-| --------------------------- | ------------------------------------- |
-| `SUPER + R`                 | Screen record (region + mic)          |
-| `SUPER + SHIFT + R`         | Screen record (full screen + mic)     |
-| `SUPER + ALT + R`           | Screen record (region + system audio) |
-| `SUPER + SHIFT + ALT + R`   | Screen record (full + system audio)   |
-| `SUPER + CTRL + R`          | Screen record (region, no audio)      |
-| `SUPER + CTRL + SHIFT + R`  | Screen record (full, no audio)        |
-| `Print`                     | Screenshot (full)                     |
-| `SUPER + Print`             | Screenshot (window)                   |
-| `SUPER + ALT + Print`       | Screenshot (area)                     |
-| `XF86 Audio/Brightness`     | Volume/brightness controls            |
-
----
-
-## Configuration
-
-### Hyprland
-
-Configs are modular in `~/.config/hypr/`:
-
-```
-hyprland.conf      → Main file (sources all below)
-├── programs.conf  → App paths
-├── vars.conf      → Environment variables
-├── monitors.conf  → Display setup (customize this!)
-├── binding.conf   → Keybindings
-├── looknfeel.conf → Animations, blur, decorations
-├── windows.conf   → Window rules
-└── autostart.conf → Startup programs
-```
-
-**Edit any file and reload:** `hyprctl reload`
-
-**Update keybindings:**
-1. Edit `~/.config/hypr/binding.conf`
-2. Press `SUPER + SHIFT + /` (or run `update-keybindings-json.sh`)
-3. Press `SUPER + /` to view updated bindings
-
-### Waybar
-
-- `~/.config/waybar/config.jsonc` - Modules and behavior
-- `~/.config/waybar/style.css` - Styling
-
-### Custom Scripts
-
-All in `~/.local/bin/`:
-- **Notifications**: `volume-notify.sh`, `brightness-notify.sh`, `capslock-notify.sh`
-- **System**: `bluetooth-toggle.sh`, `screen-record.sh`, `battery-monitor.sh`
-- **Display**: `monitor-mirror-toggle.sh`, `virtual-mirror-toggle.sh`
-- **Workflow**: `show-keybindings.sh`, `update-keybindings-json.sh`, `search_by_keyword.sh`, `search.sh`
-- **Media**: `record-audio.sh`
-- **Networking**: `hotspot.sh`, `wifi.sh`
-
----
-
-## Packages
-
-**Official** (48): See `packages.txt`
-**AUR** (9): See `aur-packages.txt`
-
-Key packages:
-- Hyprland ecosystem: `hyprland`, `hyprpaper`, `hyprlock`, `hypridle`, `hyprpicker`
-- UI: `waybar`, `dunst`, `rofi`
-- Audio: `pipewire`, `pipewire-pulse`, `wireplumber`
-- CLI tools: `fzf`, `zoxide`, `starship`, `ripgrep`, `lazygit`
-- Theme: `catppuccin-gtk-theme-mocha`, `catppuccin-cursors-mocha`
-
----
-
-## Contributing
-
-Contribution are welcome
-
-- Report issues or suggest improvements via GitHub Issues
-- Submit PRs with improvements
-- Keep the minimalist philosophy
-- Maintain Wayland-only compatibility
-- Follow existing patterns
-
----
+catppuccin, catppuccin-latte, rosepine, tokyo-night, nord, gruvbox, everforest, kanagawa, hackerman, ethereal, matte-black, miasma, osaka-jade, ristretto, vantablack, flexoki-light, white
 
 ## License
 
-**MIT License** - Use, modify, and share freely.
-
+MIT

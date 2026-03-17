@@ -1,1 +1,0 @@
-KERNEL=="card[0-9]*", KERNELS=="0000:00:02.0", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", ATTR{dev}=="226:*", SYMLINK+="dri/intel-igpu"
