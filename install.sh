@@ -151,6 +151,32 @@ if [ -f "$HOME/.config/systemd/user/battery-monitor.timer" ]; then
   echo -e "${GREEN}Battery monitor enabled${NC}"
 fi
 
+# Initialize Theme Manager (Default: Catppuccin)
+echo ""
+echo -e "${YELLOW}Initializing Theme Manager (Default: Catppuccin)...${NC}"
+THEME_DIR="$HOME/.config/hypr/themes/catppuccin"
+CACHE_DIR="$HOME/.cache"
+mkdir -p "$CACHE_DIR"
+
+# Create initial symlinks
+ln -sf "$THEME_DIR/hypr/colors.conf" "$HOME/.config/hypr/theme-active.conf"
+ln -sf "$THEME_DIR/waybar/colors.css" "$HOME/.config/waybar/theme-active.css"
+ln -sf "$THEME_DIR/rofi/colors.rasi" "$HOME/.config/rofi/shared/colors/theme-active.rasi"
+ln -sf "$THEME_DIR/wallpaper.jpg" "$CACHE_DIR/current_wallpaper"
+ln -sf "$THEME_DIR/lockscreen.png" "$CACHE_DIR/current_lockscreen.png"
+
+# Set initial GTK/Icon/Cursor settings
+if [ -f "$THEME_DIR/gtk-theme" ]; then
+    gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_DIR/gtk-theme")"
+fi
+if [ -f "$THEME_DIR/icon-theme" ]; then
+    gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"
+fi
+if [ -f "$THEME_DIR/cursor-theme" ]; then
+    gsettings set org.gnome.desktop.interface cursor-theme "$(cat "$THEME_DIR/cursor-theme")"
+fi
+echo -e "${GREEN}Theme initialized${NC}"
+
 if command -v bluetoothctl &>/dev/null; then
   sudo systemctl enable bluetooth
   sudo systemctl start bluetooth
