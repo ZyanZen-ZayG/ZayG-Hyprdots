@@ -1,8 +1,8 @@
 # AUR Packages
 wlogout
-wl-screenrec
 wl-mirror
 nwg-look
+wl-screenrec
 muslimtify
 imagemagick
 hyprshutdown
