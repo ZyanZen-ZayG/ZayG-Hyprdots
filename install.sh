@@ -277,12 +277,6 @@ backup_if_exists() {
 for item in "$DOTFILES_DIR/.config"/*; do
   basename_item=$(basename "$item")
 
-  # Skip gtk-3.0, gtk-4.0, and Kvantum
-  if [[ "$basename_item" == "gtk-3.0" || "$basename_item" == "gtk-4.0" || "$basename_item" == "Kvantum" ]]; then
-    echo -e "${YELLOW}Skipping:${NC} $basename_item"
-    continue
-  fi
-
   if [ -d "$item" ]; then
     target="$HOME/.config/$basename_item"
     backup_if_exists "$target"
@@ -390,8 +384,15 @@ fi
 # Set initial GTK/Icon/Cursor settings
 [[ -f "$THEME_DIR/gtk-theme" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_DIR/gtk-theme")"
 [[ -f "$THEME_DIR/icon-theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"
-[[ -f "$THEME_DIR/cursor-theme" ]] && gsettings set org.gnome.desktop.interface cursor-theme "$(cat "$THEME_DIR/cursor-theme")"
 [[ -f "$THEME_DIR/icons.theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icons.theme")"
+
+# Set cursor theme in uwsm/env and gsettings
+if [[ -f "$THEME_DIR/cursor-theme" ]]; then
+  CURSOR="$(cat "$THEME_DIR/cursor-theme")"
+  gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR"
+  # Append cursor env to uwsm/env
+  echo "export XCURSOR_THEME=$CURSOR" >> "$HOME/.config/uwsm/env"
+fi
 echo -e "${GREEN}Theme initialized${NC}"
 
 mkdir -p ~/Videos

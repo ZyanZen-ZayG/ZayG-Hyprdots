@@ -116,7 +116,11 @@ elif [[ -f "$THEME_PATH/icon-theme" ]]; then
   gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_PATH/icon-theme")"
 fi
 
-[[ -f "$THEME_PATH/cursor-theme" ]] && gsettings set org.gnome.desktop.interface cursor-theme "$(cat "$THEME_PATH/cursor-theme")"
+if [[ -f "$THEME_PATH/cursor-theme" ]]; then
+  CURSOR="$(cat "$THEME_PATH/cursor-theme")"
+  gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR"
+  hyprctl setcursor "$CURSOR" 24
+fi
 
 # 11. Reload Services
 hyprctl reload

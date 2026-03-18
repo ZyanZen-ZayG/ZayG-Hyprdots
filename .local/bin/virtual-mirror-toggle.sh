@@ -1,15 +1,14 @@
 #!/bin/bash
 
 # Toggle virtual mirror using wl-mirror
-# Creates a virtual Wayland output that screen sharing apps can capture
-# The virtual output mirrors eDP-1 (laptop screen)
+# Auto-detects primary monitor
+
+PRIMARY=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .name')
 
 if pgrep -x wl-mirror >/dev/null; then
-	# Stop virtual mirror
-	pkill wl-mirror
-	dunstify "Virtual Mirror" "Stopped" -u low -t 2000 -r 9996
+  pkill wl-mirror
+  notify-send "Virtual Mirror" "Stopped"
 else
-	# Start virtual mirror of laptop screen
-	wl-mirror eDP-1 &
-	dunstify "Virtual Mirror" "Mirroring eDP-1 - Select this window in screen sharing apps" -u low -t 3000 -r 9996
+  wl-mirror "$PRIMARY" &
+  notify-send "Virtual Mirror" "Mirroring $PRIMARY - Select this window in screen sharing apps"
 fi

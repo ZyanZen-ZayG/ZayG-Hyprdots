@@ -1,16 +1,20 @@
 #!/bin/bash
 
-# Toggle between extended and mirror mode for HDMI monitor
-# When mirroring: HDMI-A-1 mirrors eDP-1 (laptop screen)
-# When extended: Both monitors work independently
+# Toggle between extended and mirror mode
+# Auto-detects primary (built-in) and external monitors
 
-# Check if HDMI is currently mirroring eDP-1
-if hyprctl monitors | grep -A 5 "HDMI-A-1" | grep -q "mirror of eDP-1"; then
-	# Switch to extended mode
-	hyprctl keyword monitor "HDMI-A-1,preferred,auto,1"
-	dunstify "Monitor Mode" "Extended display enabled" -u low -t 2000 -r 9997
+PRIMARY=$(hyprctl monitors -j | jq -r '.[] | select(.name | test("^eDP")) | .name' | head -1)
+EXTERNAL=$(hyprctl monitors -j | jq -r '.[] | select(.name | test("^eDP") | not) | .name' | head -1)
+
+if [[ -z $EXTERNAL ]]; then
+  notify-send "Monitor Mode" "No external monitor detected"
+  exit 1
+fi
+
+if hyprctl monitors | grep -A 5 "$EXTERNAL" | grep -q "mirror of $PRIMARY"; then
+  hyprctl keyword monitor "$EXTERNAL,preferred,auto,1"
+  notify-send "Monitor Mode" "Extended display enabled"
 else
-	# Switch to mirror mode
-	hyprctl keyword monitor "HDMI-A-1,preferred,auto,1,mirror,eDP-1"
-	dunstify "Monitor Mode" "Mirror mode enabled" -u low -t 2000 -r 9997
+  hyprctl keyword monitor "$EXTERNAL,preferred,auto,1,mirror,$PRIMARY"
+  notify-send "Monitor Mode" "Mirror mode enabled"
 fi
