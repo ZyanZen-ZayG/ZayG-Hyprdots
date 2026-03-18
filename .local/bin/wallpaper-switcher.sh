@@ -6,7 +6,8 @@
 #   pick - choose via rofi (default)
 
 CACHE_DIR="$HOME/.cache"
-CURRENT=$(readlink -f "$CACHE_DIR/current_wallpaper" 2>/dev/null)
+# Track the actual wallpaper source path in a state file
+CURRENT=$(cat "$CACHE_DIR/current_wallpaper_path" 2>/dev/null || readlink -f "$CACHE_DIR/current_wallpaper" 2>/dev/null)
 THEME_DIR=$(dirname "$(dirname "$CURRENT")" 2>/dev/null)
 BG_DIR="$THEME_DIR/backgrounds"
 
@@ -56,16 +57,13 @@ if [[ ! -f $SELECTED ]]; then
   exit 1
 fi
 
-# Apply wallpaper
-ln -sf "$SELECTED" "$CACHE_DIR/current_wallpaper"
-ln -sf "$SELECTED" "$CACHE_DIR/current_lockscreen.png"
+# Apply wallpaper (remove first then copy so hyprpaper detects change)
+rm -f "$CACHE_DIR/current_wallpaper" "$CACHE_DIR/current_lockscreen.png"
+cp "$SELECTED" "$CACHE_DIR/current_wallpaper"
+cp "$SELECTED" "$CACHE_DIR/current_lockscreen.png"
+echo "$SELECTED" > "$CACHE_DIR/current_wallpaper_path"
 
 # Reload hyprpaper
-if pgrep -x hyprpaper > /dev/null; then
-  hyprctl hyprpaper unload all
-  hyprctl hyprpaper preload "$CACHE_DIR/current_wallpaper"
-  MONITOR=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].name')
-  [[ -n "$MONITOR" ]] && hyprctl hyprpaper wallpaper "$MONITOR,$CACHE_DIR/current_wallpaper"
-fi
+systemctl --user restart hyprpaper.service
 
 notify-send "Wallpaper" "$(basename "$SELECTED")" -i "$SELECTED"

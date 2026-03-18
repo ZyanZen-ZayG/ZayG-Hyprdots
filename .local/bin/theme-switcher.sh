@@ -81,20 +81,25 @@ if [[ -f "$GEN/btop.theme" ]]; then
   cp "$GEN/btop.theme" "$HOME/.config/btop/themes/current.theme"
 fi
 
-# 9. Wallpaper
+# 9. Wallpaper (copy so hyprpaper detects change)
 WALLPAPER=""
 if [[ -d "$THEME_PATH/backgrounds" ]]; then
   WALLPAPER=$(find "$THEME_PATH/backgrounds" -type f \( -name "*.png" -o -name "*.jpg" \) | head -1)
 elif [[ -f "$THEME_PATH/wallpaper.jpg" ]]; then
   WALLPAPER="$THEME_PATH/wallpaper.jpg"
 fi
-[[ -n "$WALLPAPER" ]] && ln -sf "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
+if [[ -n "$WALLPAPER" ]]; then
+  rm -f "$CACHE_DIR/current_wallpaper"
+  cp "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
+  echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
+fi
 
 # Lockscreen
+rm -f "$CACHE_DIR/current_lockscreen.png"
 if [[ -f "$THEME_PATH/lockscreen.png" ]]; then
-  ln -sf "$THEME_PATH/lockscreen.png" "$CACHE_DIR/current_lockscreen.png"
+  cp "$THEME_PATH/lockscreen.png" "$CACHE_DIR/current_lockscreen.png"
 elif [[ -n "$WALLPAPER" ]]; then
-  ln -sf "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
+  cp "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
 fi
 
 # 10. GTK/QT light/dark mode + Icon/Cursor settings
@@ -134,12 +139,7 @@ fi
 # 11. Reload Services
 hyprctl reload
 
-if pgrep -x hyprpaper > /dev/null; then
-  hyprctl hyprpaper unload all
-  hyprctl hyprpaper preload "$CACHE_DIR/current_wallpaper"
-  MONITOR=$(hyprctl monitors -j 2>/dev/null | grep -o '"name": "[^"]*"' | head -1 | cut -d'"' -f4)
-  [[ -n "$MONITOR" ]] && hyprctl hyprpaper wallpaper "$MONITOR,$CACHE_DIR/current_wallpaper"
-fi
+systemctl --user restart hyprpaper.service
 
 if pgrep -x waybar > /dev/null; then
   pkill waybar; sleep 0.1; uwsm app -- waybar &
