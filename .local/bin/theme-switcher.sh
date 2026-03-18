@@ -99,15 +99,24 @@ fi
 
 # 10. GTK/QT light/dark mode + Icon/Cursor settings
 if [[ -f "$THEME_PATH/light.mode" ]]; then
+  GTK_THEME_NAME="Adwaita"
   gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
 else
+  GTK_THEME_NAME="Adwaita-dark"
   gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 fi
 
 # Override GTK theme if theme specifies one
-[[ -f "$THEME_PATH/gtk-theme" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_PATH/gtk-theme")"
+[[ -f "$THEME_PATH/gtk-theme" ]] && GTK_THEME_NAME="$(cat "$THEME_PATH/gtk-theme")"
+gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME"
+
+# Update gtk-3.0 and gtk-4.0 settings.ini (some apps read these instead of gsettings)
+for gtk_dir in "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"; do
+  mkdir -p "$gtk_dir"
+  if [[ -f "$gtk_dir/settings.ini" ]]; then
+    sed -i "s/^gtk-theme-name=.*/gtk-theme-name=$GTK_THEME_NAME/" "$gtk_dir/settings.ini"
+  fi
+done
 
 # Icon theme (icons.theme = omarchy style, icon-theme = hyprsimple style)
 if [[ -f "$THEME_PATH/icons.theme" ]]; then
