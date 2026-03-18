@@ -1,9 +1,4 @@
-$active_border = rgb({{ accent_strip }})
-
 general {
-    col.active_border = $active_border
-}
-
-group {
-    col.border_active = $active_border
+    col.active_border = rgb({{ accent_strip }})
+    col.inactive_border = rgb({{ color8_strip }})
 }
