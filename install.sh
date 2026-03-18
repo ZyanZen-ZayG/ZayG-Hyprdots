@@ -76,11 +76,6 @@ detect_and_install_nvidia() {
   echo -e "${YELLOW}Installing NVIDIA packages: ${NVIDIA_PACKAGES[*]}${NC}"
   sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}" || true
 
-  # Modprobe for early KMS
-  sudo tee /etc/modprobe.d/nvidia.conf <<EOF >/dev/null
-options nvidia_drm modeset=1
-EOF
-
   # Append NVIDIA env vars to uwsm/env
   if [[ $GPU_ARCH = "turing_plus" ]]; then
     cat >>"$HOME/.config/uwsm/env" <<'EOF'
@@ -130,31 +125,94 @@ detect_and_install_vulkan() {
   fi
 }
 
-detect_and_setup_igpu() {
-  echo -e "${YELLOW}Detecting Intel iGPU...${NC}"
+detect_and_setup_multi_gpu() {
+  echo -e "${YELLOW}Detecting multi-GPU setup...${NC}"
 
-  INTEL_IGPU_PCI=$(lspci -D | grep -i "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
+  # Detect Intel iGPU
+  INTEL_IGPU_PCI=$(lspci -D | grep -iE "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
+  # Detect AMD iGPU (display class 03xx)
+  AMD_IGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
 
-  if [[ -z $INTEL_IGPU_PCI ]]; then
-    echo -e "${YELLOW}No Intel iGPU detected, skipping udev rule${NC}"
+  IGPU_SYMLINK=""
+  IGPU_VENDOR=""
+
+  if [[ -n $INTEL_IGPU_PCI ]]; then
+    IGPU_VENDOR="Intel"
+    IGPU_PCI="$INTEL_IGPU_PCI"
+    IGPU_SYMLINK="intel-igpu"
+    echo -e "${GREEN}Intel iGPU detected at: $IGPU_PCI${NC}"
+  elif [[ -n $AMD_IGPU_PCI ]]; then
+    IGPU_VENDOR="AMD"
+    IGPU_PCI="$AMD_IGPU_PCI"
+    IGPU_SYMLINK="amd-igpu"
+    echo -e "${GREEN}AMD iGPU detected at: $IGPU_PCI${NC}"
+  else
+    echo -e "${YELLOW}No iGPU detected, skipping multi-GPU setup${NC}"
     return 0
   fi
 
-  echo -e "${GREEN}Intel iGPU detected at: $INTEL_IGPU_PCI${NC}"
-
-  # Auto-create udev rule with detected PCI address
-  sudo tee /etc/udev/rules.d/99-intel-igpu.rules <<EOF >/dev/null
-KERNEL=="card[0-9]*", KERNELS=="$INTEL_IGPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", ATTR{dev}=="226:*", SYMLINK+="dri/intel-igpu"
+  # Create udev rule for consistent iGPU device path
+  UDEV_RULE_FILE="/etc/udev/rules.d/99-${IGPU_SYMLINK}.rules"
+  sudo tee "$UDEV_RULE_FILE" <<EOF >/dev/null
+KERNEL=="card[0-9]*", KERNELS=="$IGPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$IGPU_SYMLINK"
 EOF
 
-  # Create env-hyprland with AQ_DRM_DEVICES (commented out, user opts in)
-  cat >"$HOME/.config/uwsm/env-hyprland" <<'EOF'
-# Uncomment to force Hyprland to use Intel iGPU only (hybrid GPU laptops)
-# export AQ_DRM_DEVICES="/dev/dri/intel-igpu"
+  echo -e "${GREEN}$IGPU_VENDOR iGPU udev rule created: /dev/dri/$IGPU_SYMLINK -> $IGPU_PCI${NC}"
+
+  # Detect dGPU (NVIDIA or AMD discrete)
+  DGPU_SYMLINK=""
+  NVIDIA_DGPU_PCI=$(lspci -D | grep -iE "VGA.*NVIDIA" | head -1 | cut -d' ' -f1 || true)
+  # For AMD dGPU: only if we already have a non-AMD iGPU, or there are multiple AMD GPUs
+  AMD_DGPU_PCI=""
+  if [[ "$IGPU_VENDOR" != "AMD" ]]; then
+    AMD_DGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
+  else
+    # If iGPU is AMD, check for a second AMD GPU (discrete)
+    AMD_DGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | sed -n '2p' | cut -d' ' -f1 || true)
+  fi
+
+  if [[ -n $NVIDIA_DGPU_PCI ]]; then
+    DGPU_SYMLINK="nvidia-dgpu"
+    DGPU_PCI="$NVIDIA_DGPU_PCI"
+    echo -e "${GREEN}NVIDIA dGPU detected at: $DGPU_PCI${NC}"
+  elif [[ -n $AMD_DGPU_PCI ]]; then
+    DGPU_SYMLINK="amd-dgpu"
+    DGPU_PCI="$AMD_DGPU_PCI"
+    echo -e "${GREEN}AMD dGPU detected at: $DGPU_PCI${NC}"
+  fi
+
+  # Create udev rule for dGPU if found
+  if [[ -n $DGPU_SYMLINK ]]; then
+    DGPU_RULE_FILE="/etc/udev/rules.d/99-${DGPU_SYMLINK}.rules"
+    sudo tee "$DGPU_RULE_FILE" <<EOF >/dev/null
+KERNEL=="card[0-9]*", KERNELS=="$DGPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$DGPU_SYMLINK"
+EOF
+    echo -e "${GREEN}dGPU udev rule created: /dev/dri/$DGPU_SYMLINK -> $DGPU_PCI${NC}"
+  fi
+
+  # Reload udev rules to create symlinks
+  sudo udevadm control --reload
+  sudo udevadm trigger
+
+  # Build AQ_DRM_DEVICES: iGPU first (primary), dGPU second (for external monitors)
+  AQ_DEVICES="/dev/dri/$IGPU_SYMLINK"
+  if [[ -n $DGPU_SYMLINK ]]; then
+    AQ_DEVICES="$AQ_DEVICES:/dev/dri/$DGPU_SYMLINK"
+  fi
+
+  # Write to env-hyprland (uwsm users should use this file per Hyprland docs)
+  mkdir -p "$HOME/.config/uwsm"
+  cat >>"$HOME/.config/uwsm/env-hyprland" <<EOF
+
+# Multi-GPU: iGPU as primary renderer, dGPU included for external monitors
+# Uncomment to enable (recommended for hybrid GPU laptops)
+export AQ_DRM_DEVICES="$AQ_DEVICES"
 EOF
 
-  echo -e "${GREEN}Intel iGPU udev rule created (PCI: $INTEL_IGPU_PCI)${NC}"
-  echo -e "${YELLOW}To force iGPU: uncomment AQ_DRM_DEVICES in ~/.config/uwsm/env-hyprland${NC}"
+  echo -e "${GREEN}Multi-GPU setup complete${NC}"
+  if [[ -n $DGPU_SYMLINK ]]; then
+    echo -e "${YELLOW}Both iGPU and dGPU are included so external monitors work on either GPU${NC}"
+  fi
 }
 
 # Install official packages
@@ -175,19 +233,6 @@ if [ -f "$DOTFILES_DIR/aur-packages.txt" ]; then
 else
   echo -e "${YELLOW}aur-packages.txt not found, skipping AUR packages${NC}"
 fi
-
-# ======================================
-#  Hardware Auto-Detection
-# ======================================
-echo ""
-echo -e "${YELLOW}Running hardware detection...${NC}"
-
-detect_and_install_nvidia || true
-detect_and_install_vulkan || true
-detect_and_setup_igpu || true
-
-echo -e "${GREEN}Hardware detection complete${NC}"
-echo ""
 
 # ======================================
 #  Service & Hardware Setup
@@ -315,6 +360,21 @@ if [ -d "$DOTFILES_DIR/.local/share" ]; then
     fi
   done
 fi
+
+# ======================================
+#  Hardware Auto-Detection
+# ======================================
+# NOTE: This runs AFTER config copying so GPU env vars
+# appended to ~/.config/uwsm/env and env-hyprland are not overwritten.
+echo ""
+echo -e "${YELLOW}Running hardware detection...${NC}"
+
+detect_and_install_nvidia || true
+detect_and_install_vulkan || true
+detect_and_setup_multi_gpu || true
+
+echo -e "${GREEN}Hardware detection complete${NC}"
+echo ""
 
 # Enable and start services
 echo ""
