@@ -24,10 +24,14 @@ Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 
 - **17 themes** with one-command switching (`SUPER + SHIFT + T`)
 - **Hardware auto-detection** — NVIDIA, Vulkan, Intel iGPU configured at install
+- **Theme template system** — switch themes and all apps update (ghostty, waybar, rofi, hyprlock, dunst, btop)
+- **GTK/QT theming** — light/dark mode auto-set per theme
 - **Modular configs** — Hyprland split into focused files
-- **Wayland-native** — no X11 dependencies
+- **Wayland-native** — uwsm session, no X11 dependencies
 - **Smart battery** — auto brightness + power profiles
 - **Firewall** — UFW configured out of the box
+- **Audio switching** — cycle output devices with one key
+- **Nightlight** — toggle warm screen temperature
 
 ## Install
 
@@ -37,11 +41,11 @@ cd hyprsimple
 ./install.sh
 ```
 
-Then log out and select Hyprland.
+The installer auto-detects your hardware (GPU, WiFi, battery) and configures everything. Then log out and select Hyprland.
 
 ## Keybindings
 
-Press **`SUPER + /`** for interactive viewer.
+Press **`SUPER + /`** for interactive viewer with fuzzy search.
 
 | Key | Action |
 |-----|--------|
@@ -55,11 +59,16 @@ Press **`SUPER + /`** for interactive viewer.
 | `SUPER + SHIFT + T` | Switch theme |
 | `SUPER + V` | Clipboard history |
 | `SUPER + R` | Screen record |
+| `SUPER + N` | Toggle nightlight |
+| `SUPER + D` | Dismiss notifications |
+| `SUPER + SHIFT + I` | Toggle idle lock |
+| `SUPER + F10` | Switch audio output |
+| `SUPER + /` | Show keybindings |
 | `Print` | Screenshot |
 
 ## Themes
 
-17 built-in themes. Switch with `SUPER + SHIFT + T` or run `theme-switcher.sh`.
+17 built-in themes. Switch with `SUPER + SHIFT + T`.
 
 catppuccin, catppuccin-latte, rosepine, tokyo-night, nord, gruvbox, everforest, kanagawa, hackerman, ethereal, matte-black, miasma, osaka-jade, ristretto, vantablack, flexoki-light, white
 
