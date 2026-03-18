@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eEo pipefail
 
 DOTFILES_DIR="$(pwd)"
 
@@ -49,7 +49,7 @@ echo ""
 
 detect_and_install_nvidia() {
   echo -e "${YELLOW}Detecting NVIDIA GPU...${NC}"
-  NVIDIA="$(lspci | grep -i 'nvidia')"
+  NVIDIA="$(lspci | grep -i 'nvidia' || true)"
 
   if [[ -z $NVIDIA ]]; then
     echo -e "${GREEN}No NVIDIA GPU detected, skipping${NC}"
@@ -74,7 +74,7 @@ detect_and_install_nvidia() {
   fi
 
   echo -e "${YELLOW}Installing NVIDIA packages: ${NVIDIA_PACKAGES[*]}${NC}"
-  sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}"
+  sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}" || true
 
   # Modprobe for early KMS
   sudo tee /etc/modprobe.d/nvidia.conf <<EOF >/dev/null
@@ -121,14 +121,14 @@ detect_and_install_vulkan() {
 
   VULKAN_PACKAGES=()
   for vendor in "${!VULKAN_DRIVERS[@]}"; do
-    if lspci | grep -iE "(VGA|Display).*$vendor" > /dev/null; then
+    if lspci | grep -iE "(VGA|Display).*$vendor" > /dev/null 2>&1; then
       echo -e "${GREEN}Detected $vendor GPU, adding ${VULKAN_DRIVERS[$vendor]}${NC}"
       VULKAN_PACKAGES+=("${VULKAN_DRIVERS[$vendor]}")
     fi
   done
 
   if (( ${#VULKAN_PACKAGES[@]} > 0 )); then
-    sudo pacman -S --needed --noconfirm "${VULKAN_PACKAGES[@]}"
+    sudo pacman -S --needed --noconfirm "${VULKAN_PACKAGES[@]}" || true
     echo -e "${GREEN}Vulkan drivers installed${NC}"
   else
     echo -e "${YELLOW}No Vulkan-compatible GPU detected${NC}"
@@ -138,7 +138,7 @@ detect_and_install_vulkan() {
 detect_and_setup_igpu() {
   echo -e "${YELLOW}Detecting Intel iGPU...${NC}"
 
-  INTEL_IGPU_PCI=$(lspci -D | grep -i "VGA.*Intel" | head -1 | cut -d' ' -f1)
+  INTEL_IGPU_PCI=$(lspci -D | grep -i "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
 
   if [[ -z $INTEL_IGPU_PCI ]]; then
     echo -e "${YELLOW}No Intel iGPU detected, skipping udev rule${NC}"
@@ -166,7 +166,7 @@ EOF
 echo -e "${YELLOW}Installing official packages...${NC}"
 if [ -f "$DOTFILES_DIR/packages.txt" ]; then
   sudo pacman -Syu
-  sudo pacman -S --needed $(grep -v '^#' "$DOTFILES_DIR/packages.txt" | grep -v '^$')
+  sudo pacman -S --needed $(grep -v '^#' "$DOTFILES_DIR/packages.txt" | grep -v '^$') || true
 else
   echo -e "${RED}packages.txt not found!${NC}"
   exit 1
@@ -175,8 +175,8 @@ fi
 # Install AUR packages
 echo -e "${YELLOW}Installing AUR packages...${NC}"
 if [ -f "$DOTFILES_DIR/aur-packages.txt" ]; then
-  $AUR_HELPER -Syu
-  $AUR_HELPER -S --needed $(grep -v '^#' "$DOTFILES_DIR/aur-packages.txt" | grep -v '^$')
+  $AUR_HELPER -Syu || true
+  $AUR_HELPER -S --needed $(grep -v '^#' "$DOTFILES_DIR/aur-packages.txt" | grep -v '^$') || true
 else
   echo -e "${YELLOW}aur-packages.txt not found, skipping AUR packages${NC}"
 fi
@@ -187,9 +187,9 @@ fi
 echo ""
 echo -e "${YELLOW}Running hardware detection...${NC}"
 
-detect_and_install_nvidia
-detect_and_install_vulkan
-detect_and_setup_igpu
+detect_and_install_nvidia || true
+detect_and_install_vulkan || true
+detect_and_setup_igpu || true
 
 echo -e "${GREEN}Hardware detection complete${NC}"
 echo ""
@@ -250,11 +250,11 @@ setup_battery() {
 }
 
 echo -e "${YELLOW}Setting up services...${NC}"
-setup_bluetooth
-setup_network
-setup_printer
-setup_firewall
-setup_battery
+setup_bluetooth || true
+setup_network || true
+setup_printer || true
+setup_firewall || true
+setup_battery || true
 echo -e "${GREEN}Service setup complete${NC}"
 echo ""
 
@@ -262,13 +262,14 @@ echo ""
 echo ""
 echo -e "${YELLOW}Copying configuration files...${NC}"
 
-# Backup function
+# Backup function (handles symlinks, dirs, and files)
 backup_if_exists() {
-  if [ -e "$1" ] && [ ! -L "$1" ]; then
+  if [ -L "$1" ]; then
+    # Remove symlinks (from dev-install.sh)
+    rm -f "$1"
+  elif [ -e "$1" ]; then
     echo -e "${YELLOW}Backing up existing $1 to $1.backup${NC}"
-    if [ -e "$1.backup" ]; then
-      rm -rf "$1.backup"
-    fi
+    rm -rf "$1.backup"
     mv "$1" "$1.backup"
   fi
 }
@@ -277,14 +278,13 @@ backup_if_exists() {
 for item in "$DOTFILES_DIR/.config"/*; do
   basename_item=$(basename "$item")
 
+  target="$HOME/.config/$basename_item"
+  backup_if_exists "$target"
+
   if [ -d "$item" ]; then
-    target="$HOME/.config/$basename_item"
-    backup_if_exists "$target"
     cp -r "$item" "$target"
     echo -e "${GREEN}Copied:${NC} $basename_item"
   elif [ -f "$item" ]; then
-    target="$HOME/.config/$basename_item"
-    backup_if_exists "$target"
     cp "$item" "$target"
     echo -e "${GREEN}Copied:${NC} $basename_item"
   fi
@@ -321,17 +321,10 @@ if [ -d "$DOTFILES_DIR/.local/share" ]; then
   done
 fi
 
-# Generate keybindings.json
-if [ -f "$HOME/.local/bin/update-keybindings-json.sh" ]; then
-  echo ""
-  echo -e "${YELLOW}Generating keybindings.json...${NC}"
-  bash "$HOME/.local/bin/update-keybindings-json.sh"
-fi
-
 # Enable and start services
 echo ""
 echo -e "${YELLOW}Enabling system services...${NC}"
-systemctl --user enable --now pipewire pipewire-pulse wireplumber
+systemctl --user enable --now pipewire pipewire-pulse wireplumber || true
 
 # Enable battery monitor timer (if systemd files exist)
 if [ -f "$HOME/.config/systemd/user/battery-monitor.timer" ]; then
@@ -351,7 +344,7 @@ mkdir -p "$HOME/.config/btop/themes"
 mkdir -p "$HOME/.config/rofi/shared/colors"
 
 # Generate configs from templates
-bash "$HOME/.local/bin/theme-apply-templates.sh" "$THEME_DIR"
+bash "$HOME/.local/bin/theme-apply-templates.sh" "$THEME_DIR" || true
 GEN="$THEME_DIR/generated"
 
 # Create symlinks to generated configs
@@ -400,8 +393,8 @@ mkdir -p ~/Pictures
 
 echo "source ~/.local/bin/bashrc.sh" >> ~/.bashrc
 
-source ~/.bashrc
-hyprctl reload
+source ~/.bashrc || true
+hyprctl reload || true
 if pgrep -x waybar > /dev/null; then
   pkill waybar
   sleep 1
@@ -411,10 +404,10 @@ disown
 echo -e "${YELLOW}Starting waybar...${NC}"
 sleep 3
 
-systemctl --user enable --now hyprpaper.service
-systemctl --user enable --now hyprpolkitagent.service
-muslimtify daemon install
-muslimtify daemon status
+systemctl --user enable --now hyprpaper.service || true
+systemctl --user enable --now hyprpolkitagent.service || true
+muslimtify daemon install || true
+muslimtify daemon status || true
 
 echo ""
 echo -e "${GREEN}======================================"
