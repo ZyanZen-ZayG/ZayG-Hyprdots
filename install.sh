@@ -81,11 +81,6 @@ detect_and_install_nvidia() {
 options nvidia_drm modeset=1
 EOF
 
-  # Mkinitcpio early loading
-  sudo tee /etc/mkinitcpio.conf.d/nvidia.conf <<EOF >/dev/null
-MODULES+=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
-EOF
-
   # Append NVIDIA env vars to uwsm/env
   if [[ $GPU_ARCH = "turing_plus" ]]; then
     cat >>"$HOME/.config/uwsm/env" <<'EOF'
