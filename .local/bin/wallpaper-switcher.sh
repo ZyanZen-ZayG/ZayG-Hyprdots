@@ -31,7 +31,10 @@ fi
 
 MODE="${1:-pick}"
 
-if [[ $MODE == "next" ]]; then
+if [[ $MODE == "apply" ]]; then
+  # Direct apply from path (used by rofi script mode)
+  SELECTED="$2"
+elif [[ $MODE == "next" ]]; then
   # Find current index and cycle to next
   NEXT=0
   for i in "${!WALLPAPERS[@]}"; do

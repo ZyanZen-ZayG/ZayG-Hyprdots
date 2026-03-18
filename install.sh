@@ -374,6 +374,14 @@ elif [[ -n "$WALLPAPER" ]]; then
   ln -sf "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
 fi
 
+# Launcher background (fallback to wallpaper)
+LAUNCHER_BG=$(find "$THEME_DIR" -maxdepth 1 -type f -name "launcher.*" 2>/dev/null | head -1)
+if [[ -n "$LAUNCHER_BG" ]]; then
+  cp "$LAUNCHER_BG" "$CACHE_DIR/current_launcher_bg"
+elif [[ -n "$WALLPAPER" ]]; then
+  cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
+fi
+
 # Set initial GTK/Icon/Cursor settings
 [[ -f "$THEME_DIR/gtk-theme" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_DIR/gtk-theme")"
 [[ -f "$THEME_DIR/icon-theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"

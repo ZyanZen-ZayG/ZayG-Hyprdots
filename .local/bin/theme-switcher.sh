@@ -1,11 +1,18 @@
 #!/bin/bash
 
+# Usage: theme-switcher.sh [theme-name]
+#   No argument: show rofi picker
+#   With argument: apply theme directly (used by rofi script mode)
+
 THEMES_DIR="$HOME/.config/hypr/themes"
 CACHE_DIR="$HOME/.cache"
 mkdir -p "$CACHE_DIR"
 
-# Select theme using Rofi (exclude templates directory)
-THEME=$(ls "$THEMES_DIR" | grep -v templates | rofi -dmenu -p "Select Theme:")
+if [[ -n "$1" ]]; then
+  THEME="$1"
+else
+  THEME=$(ls "$THEMES_DIR" | grep -v templates | rofi -dmenu -p "Select Theme:")
+fi
 [[ -z "$THEME" ]] && exit 0
 
 THEME_PATH="$THEMES_DIR/$THEME"
@@ -92,6 +99,15 @@ if [[ -n "$WALLPAPER" ]]; then
   rm -f "$CACHE_DIR/current_wallpaper"
   cp "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
   echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
+fi
+
+# Launcher background (fallback to wallpaper)
+rm -f "$CACHE_DIR/current_launcher_bg"
+LAUNCHER_BG=$(find "$THEME_PATH" -maxdepth 1 -type f -name "launcher.*" 2>/dev/null | head -1)
+if [[ -n "$LAUNCHER_BG" ]]; then
+  cp "$LAUNCHER_BG" "$CACHE_DIR/current_launcher_bg"
+elif [[ -n "$WALLPAPER" ]]; then
+  cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
 fi
 
 # Lockscreen
