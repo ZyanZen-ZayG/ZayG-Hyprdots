@@ -50,3 +50,6 @@ alias fany='~/.local/bin/search_by_keyword.sh'
 # networking
 alias hotspot='~/.local/bin/hotspot.sh'
 alias wifi='~/.local/bin/wifi.sh'
+
+# cpu mode
+alias cpu='~/.local/bin/toggle_cpu_mode.sh'

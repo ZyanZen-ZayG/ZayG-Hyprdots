@@ -28,3 +28,21 @@ palette = 13=#f2aede
 palette = 14=#6bd7ca
 palette = 15=#bac2de
 font-size = 12
+
+# Splits
+keybind = ctrl+shift+enter=new_split:auto
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
+
+# Resize splits
+keybind = ctrl+shift+alt+h=resize_split:left,20
+keybind = ctrl+shift+alt+j=resize_split:down,20
+keybind = ctrl+shift+alt+k=resize_split:up,20
+keybind = ctrl+shift+alt+l=resize_split:right,20
+
+# Tabs
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+n=next_tab
+keybind = ctrl+shift+p=previous_tab
