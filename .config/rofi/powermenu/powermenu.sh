@@ -2,7 +2,7 @@
 
 # Current Theme
 dir="$HOME/.config/rofi/powermenu"
-theme='style/style-1'
+theme='style/style'
 
 # CMDs
 uptime="`uptime -p | sed -e 's/up //g'`"

@@ -110,6 +110,15 @@ elif [[ -n "$WALLPAPER" ]]; then
   cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
 fi
 
+# Powermenu background (fallback to wallpaper)
+rm -f "$CACHE_DIR/current_powermenu_bg"
+POWERMENU_BG=$(find "$THEME_PATH" -maxdepth 1 -type f -name "powermenu.*" 2>/dev/null | head -1)
+if [[ -n "$POWERMENU_BG" ]]; then
+  cp "$POWERMENU_BG" "$CACHE_DIR/current_powermenu_bg"
+elif [[ -n "$WALLPAPER" ]]; then
+  cp "$WALLPAPER" "$CACHE_DIR/current_powermenu_bg"
+fi
+
 # Lockscreen
 rm -f "$CACHE_DIR/current_lockscreen.png"
 if [[ -f "$THEME_PATH/lockscreen.png" ]]; then

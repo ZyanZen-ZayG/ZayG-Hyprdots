@@ -382,6 +382,14 @@ elif [[ -n "$WALLPAPER" ]]; then
   cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
 fi
 
+# Powermenu background (fallback to wallpaper)
+POWERMENU_BG=$(find "$THEME_DIR" -maxdepth 1 -type f -name "powermenu.*" 2>/dev/null | head -1)
+if [[ -n "$POWERMENU_BG" ]]; then
+  cp "$POWERMENU_BG" "$CACHE_DIR/current_powermenu_bg"
+elif [[ -n "$WALLPAPER" ]]; then
+  cp "$WALLPAPER" "$CACHE_DIR/current_powermenu_bg"
+fi
+
 # Set initial GTK/Icon/Cursor settings
 [[ -f "$THEME_DIR/gtk-theme" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_DIR/gtk-theme")"
 [[ -f "$THEME_DIR/icon-theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"
