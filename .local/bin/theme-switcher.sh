@@ -38,11 +38,11 @@ elif [[ -f "$THEME_PATH/waybar/colors.css" ]]; then
   ln -sf "$THEME_PATH/waybar/colors.css" "$HOME/.config/waybar/theme-active.css"
 fi
 
-# 4. Update Rofi colors
+# 4. Update Rofi (symlink launcher, powermenu, and colors)
+ln -sfn "$THEME_PATH/rofi/launcher" "$HOME/.config/rofi/launcher"
+ln -sfn "$THEME_PATH/rofi/powermenu" "$HOME/.config/rofi/powermenu"
 if [[ -f "$GEN/rofi-colors.rasi" ]]; then
-  ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/shared/colors/theme-active.rasi"
-elif [[ -f "$THEME_PATH/rofi/colors.rasi" ]]; then
-  ln -sf "$THEME_PATH/rofi/colors.rasi" "$HOME/.config/rofi/shared/colors/theme-active.rasi"
+  ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
 fi
 
 # 5. Update Ghostty colors (replace color lines, keep settings)
@@ -101,24 +101,6 @@ if [[ -n "$WALLPAPER" ]]; then
   echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
 fi
 
-# Launcher background (fallback to wallpaper)
-rm -f "$CACHE_DIR/current_launcher_bg"
-LAUNCHER_BG=$(find "$THEME_PATH" -maxdepth 1 -type f -name "launcher.*" 2>/dev/null | head -1)
-if [[ -n "$LAUNCHER_BG" ]]; then
-  cp "$LAUNCHER_BG" "$CACHE_DIR/current_launcher_bg"
-elif [[ -n "$WALLPAPER" ]]; then
-  cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
-fi
-
-# Powermenu background (fallback to wallpaper)
-rm -f "$CACHE_DIR/current_powermenu_bg"
-POWERMENU_BG=$(find "$THEME_PATH" -maxdepth 1 -type f -name "powermenu.*" 2>/dev/null | head -1)
-if [[ -n "$POWERMENU_BG" ]]; then
-  cp "$POWERMENU_BG" "$CACHE_DIR/current_powermenu_bg"
-elif [[ -n "$WALLPAPER" ]]; then
-  cp "$WALLPAPER" "$CACHE_DIR/current_powermenu_bg"
-fi
-
 # Lockscreen
 rm -f "$CACHE_DIR/current_lockscreen.png"
 if [[ -f "$THEME_PATH/lockscreen.png" ]]; then
@@ -136,8 +118,6 @@ else
   gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 fi
 
-# Override GTK theme if theme specifies one
-[[ -f "$THEME_PATH/gtk-theme" ]] && GTK_THEME_NAME="$(cat "$THEME_PATH/gtk-theme")"
 gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME"
 
 # Update gtk-3.0 and gtk-4.0 settings.ini (some apps read these instead of gsettings)

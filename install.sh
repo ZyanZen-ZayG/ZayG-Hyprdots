@@ -62,7 +62,7 @@ detect_and_install_nvidia() {
 
   # Turing+ (GTX 16xx, RTX 20xx-50xx, RTX Pro, Quadro RTX, datacenter)
   if echo "$NVIDIA" | grep -qE "GTX 16[0-9]{2}|RTX [2-5][0-9]{3}|RTX PRO [0-9]{4}|Quadro RTX|RTX A[0-9]{4}|A[1-9][0-9]{2}|H[1-9][0-9]{2}|T4|L[0-9]+"; then
-    NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-open-dkms nvidia-utils lib32-nvidia-utils libva-nvidia-driver)
+    NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-open-dkms nvidia-utils libva-nvidia-driver)
     GPU_ARCH="turing_plus"
   # Maxwell/Pascal/Volta (GTX 9xx/10xx, Quadro P/M, MX, Titan X/Xp/V)
   elif echo "$NVIDIA" | grep -qE "GTX (9[0-9]{2}|10[0-9]{2})|GT 10[0-9]{2}|Quadro [PM][0-9]{3,4}|Quadro GV100|MX *[0-9]+|Titan (X|Xp|V)|Tesla V100"; then
@@ -126,93 +126,58 @@ detect_and_install_vulkan() {
 }
 
 detect_and_setup_multi_gpu() {
-  echo -e "${YELLOW}Detecting multi-GPU setup...${NC}"
+  echo -e "${YELLOW}Detecting GPUs...${NC}"
 
-  # Detect Intel iGPU
-  INTEL_IGPU_PCI=$(lspci -D | grep -iE "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
-  # Detect AMD iGPU (display class 03xx)
-  AMD_IGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
+  # Detect GPUs (priority: Intel > AMD > NVIDIA)
+  INTEL_PCI=$(lspci -D | grep -iE "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
+  AMD_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
+  NVIDIA_PCI=$(lspci -D | grep -iE "VGA.*NVIDIA" | head -1 | cut -d' ' -f1 || true)
 
-  IGPU_SYMLINK=""
-  IGPU_VENDOR=""
+  GPU_SYMLINK=""
+  GPU_VENDOR=""
+  GPU_PCI=""
 
-  if [[ -n $INTEL_IGPU_PCI ]]; then
-    IGPU_VENDOR="Intel"
-    IGPU_PCI="$INTEL_IGPU_PCI"
-    IGPU_SYMLINK="intel-igpu"
-    echo -e "${GREEN}Intel iGPU detected at: $IGPU_PCI${NC}"
-  elif [[ -n $AMD_IGPU_PCI ]]; then
-    IGPU_VENDOR="AMD"
-    IGPU_PCI="$AMD_IGPU_PCI"
-    IGPU_SYMLINK="amd-igpu"
-    echo -e "${GREEN}AMD iGPU detected at: $IGPU_PCI${NC}"
+  if [[ -n $INTEL_PCI ]]; then
+    GPU_VENDOR="Intel"
+    GPU_PCI="$INTEL_PCI"
+    GPU_SYMLINK="intel-gpu"
+    echo -e "${GREEN}Intel GPU detected at: $GPU_PCI${NC}"
+  elif [[ -n $AMD_PCI ]]; then
+    GPU_VENDOR="AMD"
+    GPU_PCI="$AMD_PCI"
+    GPU_SYMLINK="amd-gpu"
+    echo -e "${GREEN}AMD GPU detected at: $GPU_PCI${NC}"
+  elif [[ -n $NVIDIA_PCI ]]; then
+    GPU_VENDOR="NVIDIA"
+    GPU_PCI="$NVIDIA_PCI"
+    GPU_SYMLINK="nvidia-gpu"
+    echo -e "${GREEN}NVIDIA GPU detected at: $GPU_PCI${NC}"
   else
-    echo -e "${YELLOW}No iGPU detected, skipping multi-GPU setup${NC}"
+    echo -e "${YELLOW}No GPU detected, skipping GPU setup${NC}"
     return 0
   fi
 
-  # Create udev rule for consistent iGPU device path
-  UDEV_RULE_FILE="/etc/udev/rules.d/99-${IGPU_SYMLINK}.rules"
+  # Create udev rule for consistent GPU device path
+  UDEV_RULE_FILE="/etc/udev/rules.d/99-${GPU_SYMLINK}.rules"
   sudo tee "$UDEV_RULE_FILE" <<EOF >/dev/null
-KERNEL=="card[0-9]*", KERNELS=="$IGPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$IGPU_SYMLINK"
+KERNEL=="card[0-9]*", KERNELS=="$GPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$GPU_SYMLINK"
 EOF
 
-  echo -e "${GREEN}$IGPU_VENDOR iGPU udev rule created: /dev/dri/$IGPU_SYMLINK -> $IGPU_PCI${NC}"
-
-  # Detect dGPU (NVIDIA or AMD discrete)
-  DGPU_SYMLINK=""
-  NVIDIA_DGPU_PCI=$(lspci -D | grep -iE "VGA.*NVIDIA" | head -1 | cut -d' ' -f1 || true)
-  # For AMD dGPU: only if we already have a non-AMD iGPU, or there are multiple AMD GPUs
-  AMD_DGPU_PCI=""
-  if [[ "$IGPU_VENDOR" != "AMD" ]]; then
-    AMD_DGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
-  else
-    # If iGPU is AMD, check for a second AMD GPU (discrete)
-    AMD_DGPU_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | sed -n '2p' | cut -d' ' -f1 || true)
-  fi
-
-  if [[ -n $NVIDIA_DGPU_PCI ]]; then
-    DGPU_SYMLINK="nvidia-dgpu"
-    DGPU_PCI="$NVIDIA_DGPU_PCI"
-    echo -e "${GREEN}NVIDIA dGPU detected at: $DGPU_PCI${NC}"
-  elif [[ -n $AMD_DGPU_PCI ]]; then
-    DGPU_SYMLINK="amd-dgpu"
-    DGPU_PCI="$AMD_DGPU_PCI"
-    echo -e "${GREEN}AMD dGPU detected at: $DGPU_PCI${NC}"
-  fi
-
-  # Create udev rule for dGPU if found
-  if [[ -n $DGPU_SYMLINK ]]; then
-    DGPU_RULE_FILE="/etc/udev/rules.d/99-${DGPU_SYMLINK}.rules"
-    sudo tee "$DGPU_RULE_FILE" <<EOF >/dev/null
-KERNEL=="card[0-9]*", KERNELS=="$DGPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$DGPU_SYMLINK"
-EOF
-    echo -e "${GREEN}dGPU udev rule created: /dev/dri/$DGPU_SYMLINK -> $DGPU_PCI${NC}"
-  fi
+  echo -e "${GREEN}$GPU_VENDOR GPU udev rule created: /dev/dri/$GPU_SYMLINK -> $GPU_PCI${NC}"
 
   # Reload udev rules to create symlinks
   sudo udevadm control --reload
   sudo udevadm trigger
 
-  # Build AQ_DRM_DEVICES: iGPU first (primary), dGPU second (for external monitors)
-  AQ_DEVICES="/dev/dri/$IGPU_SYMLINK"
-  if [[ -n $DGPU_SYMLINK ]]; then
-    AQ_DEVICES="$AQ_DEVICES:/dev/dri/$DGPU_SYMLINK"
-  fi
-
   # Write to env-hyprland (uwsm users should use this file per Hyprland docs)
   mkdir -p "$HOME/.config/uwsm"
   cat >>"$HOME/.config/uwsm/env-hyprland" <<EOF
 
-# Multi-GPU: iGPU as primary renderer, dGPU included for external monitors
-# Uncomment to enable (recommended for hybrid GPU laptops)
-export AQ_DRM_DEVICES="$AQ_DEVICES"
+# Primary GPU: $GPU_VENDOR (priority: Intel > AMD > NVIDIA)
+export AQ_DRM_DEVICES="/dev/dri/$GPU_SYMLINK"
 EOF
 
-  echo -e "${GREEN}Multi-GPU setup complete${NC}"
-  if [[ -n $DGPU_SYMLINK ]]; then
-    echo -e "${YELLOW}Both iGPU and dGPU are included so external monitors work on either GPU${NC}"
-  fi
+  echo -e "${GREEN}GPU setup complete ($GPU_VENDOR selected as primary)${NC}"
 }
 
 # Install official packages
@@ -396,7 +361,7 @@ THEME_DIR="$HOME/.config/hypr/themes/catppuccin"
 CACHE_DIR="$HOME/.cache"
 mkdir -p "$CACHE_DIR"
 mkdir -p "$HOME/.config/btop/themes"
-mkdir -p "$HOME/.config/rofi/shared/colors"
+mkdir -p "$HOME/.config/rofi"
 
 # Generate configs from templates
 bash "$HOME/.local/bin/theme-apply-templates.sh" "$THEME_DIR" || true
@@ -405,7 +370,9 @@ GEN="$THEME_DIR/generated"
 # Create symlinks to generated configs
 ln -sf "$GEN/hyprland-colors.conf" "$HOME/.config/hypr/theme-active.conf"
 ln -sf "$GEN/waybar-colors.css" "$HOME/.config/waybar/theme-active.css"
-ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/shared/colors/theme-active.rasi"
+ln -sfn "$THEME_DIR/rofi/launcher" "$HOME/.config/rofi/launcher"
+ln -sfn "$THEME_DIR/rofi/powermenu" "$HOME/.config/rofi/powermenu"
+ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
 cp "$GEN/hyprlock.conf" "$HOME/.config/hypr/theme-hyprlock.conf"
 cp "$GEN/btop.theme" "$HOME/.config/btop/themes/current.theme"
 
@@ -429,24 +396,14 @@ elif [[ -n "$WALLPAPER" ]]; then
   ln -sf "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
 fi
 
-# Launcher background (fallback to wallpaper)
-LAUNCHER_BG=$(find "$THEME_DIR" -maxdepth 1 -type f -name "launcher.*" 2>/dev/null | head -1)
-if [[ -n "$LAUNCHER_BG" ]]; then
-  cp "$LAUNCHER_BG" "$CACHE_DIR/current_launcher_bg"
-elif [[ -n "$WALLPAPER" ]]; then
-  cp "$WALLPAPER" "$CACHE_DIR/current_launcher_bg"
+# Set initial GTK/Icon/Cursor settings + dark/light mode
+if [[ -f "$THEME_DIR/light.mode" ]]; then
+  gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
+  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
+else
+  gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 fi
-
-# Powermenu background (fallback to wallpaper)
-POWERMENU_BG=$(find "$THEME_DIR" -maxdepth 1 -type f -name "powermenu.*" 2>/dev/null | head -1)
-if [[ -n "$POWERMENU_BG" ]]; then
-  cp "$POWERMENU_BG" "$CACHE_DIR/current_powermenu_bg"
-elif [[ -n "$WALLPAPER" ]]; then
-  cp "$WALLPAPER" "$CACHE_DIR/current_powermenu_bg"
-fi
-
-# Set initial GTK/Icon/Cursor settings
-[[ -f "$THEME_DIR/gtk-theme" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$(cat "$THEME_DIR/gtk-theme")"
 [[ -f "$THEME_DIR/icon-theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"
 [[ -f "$THEME_DIR/icons.theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icons.theme")"
 
