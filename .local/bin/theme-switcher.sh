@@ -49,16 +49,24 @@ if [[ -f "$GEN/rofi-colors.rasi" ]]; then
   ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
 fi
 
-# 5. Update Ghostty colors (replace color lines, keep settings)
-if [[ -f "$GEN/ghostty.conf" ]]; then
-  GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
-  if [[ -f "$GHOSTTY_CONFIG" ]]; then
-    # Remove old color/palette/theme lines, keep non-color settings
-    grep -vE '^(background|foreground|cursor-color|cursor-text|selection-background|selection-foreground|palette|theme) =' "$GHOSTTY_CONFIG" > "$GHOSTTY_CONFIG.tmp"
-    # Append new colors
+# 5. Update Ghostty theme
+GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+if [[ -f "$GHOSTTY_CONFIG" ]]; then
+  # Remove old color/palette/theme lines, keep non-color settings
+  grep -vE '^(background|foreground|cursor-color|cursor-text|selection-background|selection-foreground|palette|theme) =' "$GHOSTTY_CONFIG" > "$GHOSTTY_CONFIG.tmp"
+
+  if [[ -f "$THEME_PATH/ghostty-theme" ]]; then
+    # Use Ghostty's built-in theme
+    echo "theme = $(cat "$THEME_PATH/ghostty-theme")" >> "$GHOSTTY_CONFIG.tmp"
+  elif [[ -f "$GEN/ghostty.conf" ]]; then
+    # Fallback to template-generated colors
     cat "$GEN/ghostty.conf" >> "$GHOSTTY_CONFIG.tmp"
-    mv "$GHOSTTY_CONFIG.tmp" "$GHOSTTY_CONFIG"
   fi
+
+  mv "$GHOSTTY_CONFIG.tmp" "$GHOSTTY_CONFIG"
+
+  # Reload Ghostty config
+  busctl --user call com.mitchellh.ghostty /com/mitchellh/ghostty org.gtk.Actions Activate "sava{sv}" "reload-config" 0 0 2>/dev/null
 fi
 
 # 6. Update Hyprlock theme colors
