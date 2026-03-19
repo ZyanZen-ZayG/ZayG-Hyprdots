@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$HOME/.local/bin/hypr-helpers.sh"
+
 # Usage: theme-switcher.sh [theme-name]
 #   No argument: show rofi picker
 #   With argument: apply theme directly (used by rofi script mode)
@@ -38,13 +40,7 @@ elif [[ -f "$THEME_PATH/waybar/colors.css" ]]; then
   ln -sf "$THEME_PATH/waybar/colors.css" "$HOME/.config/waybar/theme-active.css"
 fi
 
-# 4. Update Rofi (symlink theme images and colors)
-if [[ -d "$THEME_PATH/rofi/launcher/images" ]]; then
-  ln -sfn "$THEME_PATH/rofi/launcher/images" "$HOME/.config/rofi/launcher/images"
-fi
-if [[ -d "$THEME_PATH/rofi/powermenu/images" ]]; then
-  ln -sfn "$THEME_PATH/rofi/powermenu/images" "$HOME/.config/rofi/powermenu/images"
-fi
+# 4. Update Rofi colors
 if [[ -f "$GEN/rofi-colors.rasi" ]]; then
   ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
 fi
@@ -103,7 +99,7 @@ fi
 # 9. Wallpaper (copy so hyprpaper detects change)
 WALLPAPER=""
 if [[ -d "$THEME_PATH/backgrounds" ]]; then
-  WALLPAPER=$(find "$THEME_PATH/backgrounds" -type f \( -name "*.png" -o -name "*.jpg" \) | head -1)
+  WALLPAPER=$(find "$THEME_PATH/backgrounds" -type f \( -name "*.png" -o -name "*.jpg" \) | sort | head -1)
 elif [[ -f "$THEME_PATH/wallpaper.jpg" ]]; then
   WALLPAPER="$THEME_PATH/wallpaper.jpg"
 fi
@@ -111,6 +107,21 @@ if [[ -n "$WALLPAPER" ]]; then
   rm -f "$CACHE_DIR/current_wallpaper"
   cp "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
   echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
+
+  # Use theme background as rofi launcher/powermenu image
+  for rofi_type in launcher powermenu; do
+    ROFI_TARGET="$HOME/.config/rofi/$rofi_type/images"
+    mkdir -p "$ROFI_TARGET"
+    [[ -L "$ROFI_TARGET" ]] && rm -f "$ROFI_TARGET" && mkdir -p "$ROFI_TARGET"
+    ln -sf "$WALLPAPER" "$ROFI_TARGET/wallpaper"
+  done
+fi
+
+# Write hyprpaper.conf based on live wallpaper state
+if [[ -f "$CACHE_DIR/live_wallpaper_enabled" && -d "$THEME_PATH/backgrounds" ]]; then
+  write_hyprpaper_conf "$THEME_PATH/backgrounds" 30
+else
+  write_hyprpaper_conf "$HOME/.cache/current_wallpaper"
 fi
 
 # Lockscreen
