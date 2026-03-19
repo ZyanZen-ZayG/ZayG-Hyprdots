@@ -64,6 +64,8 @@ swayimg
 
 # CLI Tools
 fzf
+vi
+less
 zoxide
 yazi
 starship
