@@ -38,9 +38,13 @@ elif [[ -f "$THEME_PATH/waybar/colors.css" ]]; then
   ln -sf "$THEME_PATH/waybar/colors.css" "$HOME/.config/waybar/theme-active.css"
 fi
 
-# 4. Update Rofi (symlink launcher, powermenu, and colors)
-ln -sfn "$THEME_PATH/rofi/launcher" "$HOME/.config/rofi/launcher"
-ln -sfn "$THEME_PATH/rofi/powermenu" "$HOME/.config/rofi/powermenu"
+# 4. Update Rofi (symlink theme images and colors)
+if [[ -d "$THEME_PATH/rofi/launcher/images" ]]; then
+  ln -sfn "$THEME_PATH/rofi/launcher/images" "$HOME/.config/rofi/launcher/images"
+fi
+if [[ -d "$THEME_PATH/rofi/powermenu/images" ]]; then
+  ln -sfn "$THEME_PATH/rofi/powermenu/images" "$HOME/.config/rofi/powermenu/images"
+fi
 if [[ -f "$GEN/rofi-colors.rasi" ]]; then
   ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
 fi
