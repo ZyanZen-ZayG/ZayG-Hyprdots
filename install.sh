@@ -387,6 +387,7 @@ fi
 if [[ -d "$THEME_DIR/backgrounds" ]]; then
   WALLPAPER=$(find "$THEME_DIR/backgrounds" -type f \( -name "*.png" -o -name "*.jpg" \) | head -1)
   [[ -n "$WALLPAPER" ]] && ln -sf "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
+  [[ -n "$WALLPAPER" ]] && echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
 elif [[ -f "$THEME_DIR/wallpaper.jpg" ]]; then
   ln -sf "$THEME_DIR/wallpaper.jpg" "$CACHE_DIR/current_wallpaper"
 fi
@@ -394,6 +395,13 @@ if [[ -f "$THEME_DIR/lockscreen.png" ]]; then
   ln -sf "$THEME_DIR/lockscreen.png" "$CACHE_DIR/current_lockscreen.png"
 elif [[ -n "$WALLPAPER" ]]; then
   ln -sf "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
+fi
+
+# Enable live wallpaper by default
+touch "$CACHE_DIR/live_wallpaper_enabled"
+source "$HOME/.local/bin/hypr-helpers.sh"
+if [[ -d "$THEME_DIR/backgrounds" ]]; then
+  write_hyprpaper_conf "$THEME_DIR/backgrounds" 30
 fi
 
 # Set initial GTK/Icon/Cursor settings + dark/light mode
