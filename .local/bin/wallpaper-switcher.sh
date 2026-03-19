@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$HOME/.local/bin/hypr-helpers.sh"
+
 # Switch wallpaper within the current theme
 # Usage: wallpaper-switcher.sh [next|pick]
 #   next - cycle to next wallpaper
@@ -65,6 +67,10 @@ rm -f "$CACHE_DIR/current_wallpaper" "$CACHE_DIR/current_lockscreen.png"
 cp "$SELECTED" "$CACHE_DIR/current_wallpaper"
 cp "$SELECTED" "$CACHE_DIR/current_lockscreen.png"
 echo "$SELECTED" > "$CACHE_DIR/current_wallpaper_path"
+
+# Disable live wallpaper mode (manual pick overrides cycling)
+rm -f "$CACHE_DIR/live_wallpaper_enabled"
+write_hyprpaper_conf "$HOME/.cache/current_wallpaper"
 
 # Reload hyprpaper
 systemctl --user restart hyprpaper.service
