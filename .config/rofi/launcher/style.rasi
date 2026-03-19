@@ -47,22 +47,13 @@ inputbar {
     background-image:            url("~/.config/rofi/launcher/images/wallpaper.jpg", width);
     text-color:                  @foreground;
     orientation:                 horizontal;
-    children:                    [ "textbox-prompt-colon", "entry", "dummy", "mode-switcher" ];
-}
-textbox-prompt-colon {
-    enabled:                     true;
-    expand:                      false;
-    str:                         "";
-    padding:                     10px 12px;
-    border-radius:               100%;
-    background-color:            @background-alt;
-    text-color:                  inherit;
+    children:                    ["entry", "dummy", "mode-switcher" ];
 }
 entry {
     enabled:                     true;
     expand:                      false;
-    width:                       275px;
-    padding:                     12px 16px;
+    width:                       400px;
+    padding:                     12px 12px;
     border-radius:               100%;
     background-color:            @background-alt;
     text-color:                  inherit;
