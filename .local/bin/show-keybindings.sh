@@ -15,21 +15,27 @@ hyprctl -j binds |
     -e 's/^68,/SUPER CTRL + /' \
     -e 's/^72,/SUPER ALT + /' \
     -e 's/^73,/SUPER SHIFT ALT + /' \
-    -e 's/^76,/SUPER CTRL ALT + /' |
+    -e 's/^76,/SUPER CTRL ALT + /' \
+    -e 's/^69,/SUPER CTRL SHIFT + /' \
+    -e 's/^5,/CTRL SHIFT + /' \
+    -e 's/^9,/SHIFT ALT + /' \
+    -e 's/^12,/CTRL ALT + /' |
   awk -F, '{
-    key = $1 $2
+    key = $1
     gsub(/^[ \t]*\+?[ \t]*/, "", key)
     gsub(/[ \t]+$/, "", key)
 
-    action = $3
-    if (action == "") {
-      for (i = 4; i <= NF; i++) action = action $i (i < NF ? "," : "")
-      sub(/,$/, "", action)
-      gsub(/(^|,)[[:space:]]*exec[[:space:]]*,?/, "", action)
-      gsub(/^[ \t]+|[ \t]+$/, "", action)
+    desc = $2
+    gsub(/^[ \t]+|[ \t]+$/, "", desc)
+
+    if (desc == "") {
+      for (i = 3; i <= NF; i++) desc = desc $i (i < NF ? "," : "")
+      sub(/,$/, "", desc)
+      gsub(/(^|,)[[:space:]]*exec[[:space:]]*,?/, "", desc)
+      gsub(/^[ \t]+|[ \t]+$/, "", desc)
     }
 
-    if (action != "") printf "%-30s  %s\n", key, action
+    if (desc != "") printf "%-30s  %s\n", key, desc
   }' |
   sort -u |
-  rofi -dmenu -p "Keybindings" -i
+  rofi -dmenu -p "󰌌" -i -theme ~/.config/rofi/keybindings/style.rasi
