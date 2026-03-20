@@ -109,11 +109,14 @@ if [[ -n "$WALLPAPER" ]]; then
   echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
 
   # Use theme background as rofi launcher/powermenu image
+  WP_EXT="${WALLPAPER##*.}"
   for rofi_type in launcher powermenu; do
     ROFI_TARGET="$HOME/.config/rofi/$rofi_type/images"
     mkdir -p "$ROFI_TARGET"
     [[ -L "$ROFI_TARGET" ]] && rm -f "$ROFI_TARGET" && mkdir -p "$ROFI_TARGET"
-    ln -sf "$WALLPAPER" "$ROFI_TARGET/wallpaper"
+    rm -f "$ROFI_TARGET"/wallpaper.*
+    ln -sf "$WALLPAPER" "$ROFI_TARGET/wallpaper.$WP_EXT"
+    sed -i "s|images/wallpaper\.[a-z]*|images/wallpaper.$WP_EXT|" "$HOME/.config/rofi/$rofi_type/style.rasi"
   done
 fi
 
