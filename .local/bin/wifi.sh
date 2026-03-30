@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Auto-detect WiFi interface
-IFACE=$(ls /sys/class/net/*/wireless 2>/dev/null | head -1 | cut -d'/' -f5)
+IFACE=$(ls -d /sys/class/net/*/wireless 2>/dev/null | head -1 | cut -d'/' -f5)
 
 if [[ -z $IFACE ]]; then
   echo "No WiFi interface found"
