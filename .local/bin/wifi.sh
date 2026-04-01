@@ -10,6 +10,8 @@ fi
 
 SSID=$1
 
+iwctl station "$IFACE" scan
+
 if [[ -z $SSID ]]; then
   iwctl station "$IFACE" get-networks
   exit
