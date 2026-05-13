@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1775400133552,
+  "projectRoot": "/home/rizki/Projects/hyprsimple",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 5,
+      "lastAccessed": 1775400133550,
+      "keyFiles": [
+        "image1.png",
+        "image2.png",
+        "image3.png",
+        "image4.png",
+        "image5.png"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1775400133550,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": ".local/bin/live-wallpaper-toggle.sh",
+      "accessCount": 2,
+      "lastAccessed": 1775400304425,
+      "type": "file"
+    },
+    {
+      "path": ".config/hypr/autostart.conf",
+      "accessCount": 2,
+      "lastAccessed": 1775400369291,
+      "type": "file"
+    },
+    {
+      "path": ".config/hypr",
+      "accessCount": 1,
+      "lastAccessed": 1775400348151,
+      "type": "directory"
+    }
+  ],
+  "userDirectives": []
+}

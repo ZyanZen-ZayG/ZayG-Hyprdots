@@ -19,8 +19,9 @@ if [[ ! -d "$BG_DIR" ]]; then
   exit 1
 fi
 
-if [[ -f "$FLAG" ]]; then
-  # Currently ON → turn OFF
+ACTION="$1"
+
+turn_off() {
   # Try to get current wallpaper from hyprpaper IPC
   ACTIVE=$(hyprctl hyprpaper listactive 2>/dev/null | head -1)
   # Parse: output format is "monitor = /path/to/wallpaper"
@@ -42,10 +43,32 @@ if [[ -f "$FLAG" ]]; then
   rm -f "$FLAG"
   systemctl --user restart hyprpaper.service
   notify-send "Live Wallpaper" "Disabled" -i "$CACHE_DIR/current_wallpaper"
-else
-  # Currently OFF → turn ON
+}
+
+turn_on() {
   write_hyprpaper_conf "$BG_DIR" 30
   touch "$FLAG"
   systemctl --user restart hyprpaper.service
   notify-send "Live Wallpaper" "Enabled (30s cycle)" -i "$CACHE_DIR/current_wallpaper"
-fi
+}
+
+case "$ACTION" in
+  on)
+    # Skip if already on
+    [[ -f "$FLAG" ]] && exit 0
+    turn_on
+    ;;
+  off)
+    # Skip if already off
+    [[ ! -f "$FLAG" ]] && exit 0
+    turn_off
+    ;;
+  *)
+    # Toggle (original behavior)
+    if [[ -f "$FLAG" ]]; then
+      turn_off
+    else
+      turn_on
+    fi
+    ;;
+esac
