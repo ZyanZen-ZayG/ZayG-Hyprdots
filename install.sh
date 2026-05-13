@@ -267,12 +267,10 @@ echo ""
 echo ""
 echo -e "${YELLOW}Copying configuration files...${NC}"
 
-# Backup function (handles symlinks, dirs, and files)
+# Backup function: moves any existing target (file, dir, or symlink) to <target>.backup.
+# Always copy-based; no symlink-install paths exist anymore.
 backup_if_exists() {
-  if [ -L "$1" ]; then
-    # Remove symlinks (from dev-install.sh)
-    rm -f "$1"
-  elif [ -e "$1" ]; then
+  if [ -e "$1" ] || [ -L "$1" ]; then
     echo -e "${YELLOW}Backing up existing $1 to $1.backup${NC}"
     rm -rf "$1.backup"
     mv "$1" "$1.backup"
