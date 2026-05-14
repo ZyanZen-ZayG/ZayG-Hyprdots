@@ -53,3 +53,7 @@ alias wifi='~/.local/bin/wifi.sh'
 
 # cpu mode
 alias cpu='~/.local/bin/toggle_cpu_mode.sh'
+
+# muslimtify add/remove
+alias muslimtify-add='~/.local/bin/hyprsimple-muslimtify.sh add'
+alias muslimtify-remove='~/.local/bin/hyprsimple-muslimtify.sh remove'
