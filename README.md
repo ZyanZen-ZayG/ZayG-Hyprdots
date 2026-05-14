@@ -5,7 +5,9 @@ Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 > [!IMPORTANT]
 > **Requires Hyprland ≥ 0.55.0.** The config has been migrated from `.conf` to Lua (`hyprland.lua` + per-concern modules under `~/.config/hypr/`) to match Hyprland's new Lua-based configuration. Older Hyprland releases that do not ship the `hl` global will fail to load this config. Tested against Hyprland `0.55.0` (commit `af923e3`); if your `hyprctl version` is lower, upgrade Hyprland first or stay on an earlier tag of this repo.
 
-> NOTE: This dotfile have builtin [muslimtify](https://github.com/rizukirr/muslimtify). A prayer time notification daemon for Linux on waybar
+> NOTE: This dotfile have builtin [muslimtify](https://github.com/rizukirr/muslimtify). A prayer time notification daemon for Linux on waybar.
+>
+> Run `muslimtify-remove` to uninstall it (package, daemon, waybar module, and CSS). Run `muslimtify-add` to re-enable it later. Both commands are idempotent and back up your waybar config to `.bak` before editing.
 
 ![Home Screen](assets/image1.png)
 
