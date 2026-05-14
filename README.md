@@ -7,8 +7,11 @@ Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 
 > NOTE: This dotfile have builtin [muslimtify](https://github.com/rizukirr/muslimtify). A prayer time notification daemon for Linux on waybar
 
-![Screenshot 1](assets/image1.png)
-![Screenshot 2](assets/image2.png)
+| ![Home Screen](assets/image1.png) |
+|-------------------------------------|
+| ![Power Menu](assets/image5.png) | ![Terminal](assets/image2.png) |
+|-------------------------------------|-------------------------------------|
+| ![Menu Launcher](assets/image3.png) | ![Theme Switcher](assets/image4.png) |
 
 ## Features
 
