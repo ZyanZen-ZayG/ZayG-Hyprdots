@@ -352,72 +352,29 @@ if [ -f "$HOME/.config/systemd/user/battery-monitor.timer" ]; then
   echo -e "${GREEN}Battery monitor enabled${NC}"
 fi
 
-# Initialize Theme Manager (Default: Catppuccin)
+# Initialize Theme Manager (Default: Deep Sea)
+DEFAULT_THEME="deep-sea"
 echo ""
-echo -e "${YELLOW}Initializing Theme Manager (Default: Catppuccin)...${NC}"
-THEME_DIR="$HOME/.config/hypr/themes/catppuccin"
+echo -e "${YELLOW}Initializing Theme Manager (Default: ${DEFAULT_THEME})...${NC}"
+THEME_DIR="$HOME/.config/hypr/themes/$DEFAULT_THEME"
 CACHE_DIR="$HOME/.cache"
 mkdir -p "$CACHE_DIR"
 mkdir -p "$HOME/.config/btop/themes"
 mkdir -p "$HOME/.config/rofi"
 
-# Generate configs from templates
-bash "$HOME/.local/bin/theme-apply-templates.sh" "$THEME_DIR" || true
-GEN="$THEME_DIR/generated"
-
-# Create symlinks to generated configs
-ln -sf "$GEN/hyprland-colors.conf" "$HOME/.config/hypr/theme-active.conf"
-ln -sf "$GEN/waybar-colors.css" "$HOME/.config/waybar/theme-active.css"
+# One-time setup: symlink rofi launcher/powermenu dirs to the default theme
 ln -sfn "$THEME_DIR/rofi/launcher" "$HOME/.config/rofi/launcher"
 ln -sfn "$THEME_DIR/rofi/powermenu" "$HOME/.config/rofi/powermenu"
-ln -sf "$GEN/rofi-colors.rasi" "$HOME/.config/rofi/rofi-colors.rasi"
-cp "$GEN/hyprlock.conf" "$HOME/.config/hypr/theme-hyprlock.conf"
-cp "$GEN/btop.theme" "$HOME/.config/btop/themes/current.theme"
 
-# Apply ghostty colors
-if [[ -f "$GEN/ghostty.conf" && -f "$HOME/.config/ghostty/config" ]]; then
-  grep -vE '^(background|foreground|cursor-color|cursor-text|selection-background|selection-foreground|palette|theme) =' "$HOME/.config/ghostty/config" > "$HOME/.config/ghostty/config.tmp"
-  cat "$GEN/ghostty.conf" >> "$HOME/.config/ghostty/config.tmp"
-  mv "$HOME/.config/ghostty/config.tmp" "$HOME/.config/ghostty/config"
-fi
-
-# Wallpaper and lockscreen
-if [[ -d "$THEME_DIR/backgrounds" ]]; then
-  WALLPAPER=$(find "$THEME_DIR/backgrounds" -type f \( -name "*.png" -o -name "*.jpg" \) | head -1)
-  [[ -n "$WALLPAPER" ]] && ln -sf "$WALLPAPER" "$CACHE_DIR/current_wallpaper"
-  [[ -n "$WALLPAPER" ]] && echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper_path"
-elif [[ -f "$THEME_DIR/wallpaper.jpg" ]]; then
-  ln -sf "$THEME_DIR/wallpaper.jpg" "$CACHE_DIR/current_wallpaper"
-fi
-if [[ -f "$THEME_DIR/lockscreen.png" ]]; then
-  ln -sf "$THEME_DIR/lockscreen.png" "$CACHE_DIR/current_lockscreen.png"
-elif [[ -n "$WALLPAPER" ]]; then
-  ln -sf "$WALLPAPER" "$CACHE_DIR/current_lockscreen.png"
-fi
-
-# Enable live wallpaper by default
+# Enable live wallpaper by default (theme-switcher reads this when writing hyprpaper.conf)
 touch "$CACHE_DIR/live_wallpaper_enabled"
-source "$HOME/.local/bin/hypr-helpers.sh"
-if [[ -d "$THEME_DIR/backgrounds" ]]; then
-  write_hyprpaper_conf "$THEME_DIR/backgrounds" 30
-fi
 
-# Set initial GTK/Icon/Cursor settings + dark/light mode
-if [[ -f "$THEME_DIR/light.mode" ]]; then
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
-else
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
-fi
-[[ -f "$THEME_DIR/icon-theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icon-theme")"
-[[ -f "$THEME_DIR/icons.theme" ]] && gsettings set org.gnome.desktop.interface icon-theme "$(cat "$THEME_DIR/icons.theme")"
+# Apply the default theme via theme-switcher.sh (skip runtime reloads — Hyprland isn't running yet)
+THEME_SWITCHER_NO_RELOAD=1 bash "$HOME/.local/bin/theme-switcher.sh" "$DEFAULT_THEME"
 
-# Set cursor theme in uwsm/env and gsettings
+# Install-only: persist cursor theme into uwsm/env so it's available on next login
 if [[ -f "$THEME_DIR/cursor-theme" ]]; then
   CURSOR="$(cat "$THEME_DIR/cursor-theme")"
-  gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR"
-  # Append cursor env to uwsm/env
   echo "export XCURSOR_THEME=$CURSOR" >> "$HOME/.config/uwsm/env"
 fi
 echo -e "${GREEN}Theme initialized${NC}"

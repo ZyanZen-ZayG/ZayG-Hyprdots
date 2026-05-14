@@ -164,20 +164,22 @@ fi
 if [[ -f "$THEME_PATH/cursor-theme" ]]; then
   CURSOR="$(cat "$THEME_PATH/cursor-theme")"
   gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR"
-  hyprctl setcursor "$CURSOR" 24
+  [[ -z "$THEME_SWITCHER_NO_RELOAD" ]] && hyprctl setcursor "$CURSOR" 24
 fi
 
-# 11. Reload Services
-hyprctl reload
+# 11. Reload Services (skipped during install via THEME_SWITCHER_NO_RELOAD=1)
+if [[ -z "$THEME_SWITCHER_NO_RELOAD" ]]; then
+  hyprctl reload
 
-systemctl --user restart hyprpaper.service
+  systemctl --user restart hyprpaper.service
 
-if pgrep -x waybar > /dev/null; then
-  pkill waybar; sleep 0.1; uwsm app -- waybar &
+  if pgrep -x waybar > /dev/null; then
+    pkill waybar; sleep 0.1; uwsm app -- waybar &
+  fi
+
+  if pgrep -x dunst > /dev/null; then
+    pkill dunst; uwsm app -- dunst &
+  fi
+
+  notify-send "Theme Manager" "Theme '$THEME' applied!" -i "$CACHE_DIR/current_wallpaper"
 fi
-
-if pgrep -x dunst > /dev/null; then
-  pkill dunst; uwsm app -- dunst &
-fi
-
-notify-send "Theme Manager" "Theme '$THEME' applied!" -i "$CACHE_DIR/current_wallpaper"

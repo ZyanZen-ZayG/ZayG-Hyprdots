@@ -1,7 +1,7 @@
 local vars = require("hypr.vars")
 local home = os.getenv("HOME")
 
-hl.bind("SUPER + X",         hl.dsp.exit(),                                                     { description = "Exit Hyprland" })
+hl.bind("SUPER + X",         hl.dsp.exec_cmd(home .. "/.local/bin/hypr-logout.sh"),             { description = "Logout" })
 hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("hyprlock"),                                       { description = "Lock Screen" })
 hl.bind("SUPER + ESCAPE",    hl.dsp.exec_cmd(vars.powermenu),                                   { description = "Power Menu" })
 hl.bind("CTRL + ESCAPE",     hl.dsp.exec_cmd("sh -c 'killall waybar || uwsm app -- waybar'"),   { description = "Toggle Waybar" })
