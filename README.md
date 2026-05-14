@@ -43,6 +43,10 @@ cd hyprsimple
 ./install.sh
 ```
 
+## Network
+
+To see the available network interfaces, run `wifi`. To connect to a network, run `wifi <network name>` for example `wifi "MY NETWORK"`
+
 ## Keybindings
 
 Press **`SUPER + /`** for interactive viewer with fuzzy search.
