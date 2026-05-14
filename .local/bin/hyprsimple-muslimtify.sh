@@ -175,7 +175,10 @@ PY
     ok "waybar style cleaned"
   fi
 
-  rm -f "$HOME/.local/bin/waybar-muslimtify.sh"
+  # NOTE: ~/.local/bin/waybar-muslimtify.sh is intentionally NOT removed.
+  # Keeping it means `add` can re-enable cleanly without needing to recreate
+  # the script from scratch. It's harmless when the daemon is uninstalled
+  # (just produces no output).
 
   reload_waybar
   ok "muslimtify removed"
