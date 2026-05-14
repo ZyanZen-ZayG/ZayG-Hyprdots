@@ -32,3 +32,4 @@ docs/
 
 # Generated theme configs (auto-created by theme-apply-templates.sh)
 .config/hypr/themes/*/generated/
+/.omc
