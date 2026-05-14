@@ -14,7 +14,7 @@ hl.window_rule({
 hl.window_rule({ match = { class = "steam" },                        float = true })
 hl.window_rule({ match = { class = "steam", title = "Steam" },       center = true })
 hl.window_rule({ match = { class = "steam.*" },                      tag = "-default-opacity" })
-hl.window_rule({ match = { class = "steam.*" },                      opacity = { 1, 1 } })
+hl.window_rule({ match = { class = "steam.*" },                      opacity = "1 1" })
 hl.window_rule({ match = { class = "steam", title = "Steam" },       size = { 1100, 700 } })
 hl.window_rule({ match = { class = "steam", title = "Friends List" },size = { 460, 800 } })
 hl.window_rule({ match = { class = "steam" },                        idle_inhibit = "fullscreen" })
@@ -35,15 +35,15 @@ hl.window_rule({ match = { class = "(chrome-youtube.com__-Default|chrome-app.zoo
 hl.window_rule({ match = { tag = "chromium-based-browser" }, tile = true })
 
 -- Subtle opacity, but not for video sites
-hl.window_rule({ match = { tag = "chromium-based-browser" }, opacity = { 1.0, 0.97 } })
-hl.window_rule({ match = { tag = "firefox-based-browser" },  opacity = { 1.0, 0.97 } })
+hl.window_rule({ match = { tag = "chromium-based-browser" }, opacity = "1.0 0.97" })
+hl.window_rule({ match = { tag = "firefox-based-browser" },  opacity = "1.0 0.97" })
 
 -- =====================================================================
 -- terminal (was windows/terminal.conf)
 -- =====================================================================
 hl.window_rule({ match = { class = "(Alacritty|kitty|com.mitchellh.ghostty)" }, tag = "+terminal" })
 hl.window_rule({ match = { tag = "terminal" },                                  tag = "-default-opacity" })
-hl.window_rule({ match = { tag = "terminal" },                                  opacity = { 0.97, 0.9 } })
+hl.window_rule({ match = { tag = "terminal" },                                  opacity = "0.97 0.9" })
 
 -- =====================================================================
 -- webcam (was windows/webcam.conf)
@@ -72,7 +72,7 @@ hl.window_rule({ match = { class = "org.gnome.Calculator" }, float = true })
 
 -- No transparency on media windows
 hl.window_rule({ match = { class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$" }, tag = "-default-opacity" })
-hl.window_rule({ match = { class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$" }, opacity = { 1, 1 } })
+hl.window_rule({ match = { class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$" }, opacity = "1 1" })
 
 -- Pop / no-idle tags
 hl.window_rule({ match = { tag = "pop" },    rounding = 4 })
@@ -129,7 +129,7 @@ hl.window_rule({
 -- qemu (was windows/qemu.conf)
 -- =====================================================================
 hl.window_rule({ match = { class = "qemu" }, tag = "-default-opacity" })
-hl.window_rule({ match = { class = "qemu" }, opacity = { 1, 1 } })
+hl.window_rule({ match = { class = "qemu" }, opacity = "1 1" })
 
 -- =====================================================================
 -- emulator (was windows/emulator.conf)
@@ -149,7 +149,7 @@ hl.window_rule({ match = { tag = "pip" }, pin = true })
 hl.window_rule({ match = { tag = "pip" }, size = { 600, 338 } })
 hl.window_rule({ match = { tag = "pip" }, keep_aspect_ratio = true })
 hl.window_rule({ match = { tag = "pip" }, border_size = 0 })
-hl.window_rule({ match = { tag = "pip" }, opacity = { 1, 1 } })
+hl.window_rule({ match = { tag = "pip" }, opacity = "1 1" })
 hl.window_rule({ match = { tag = "pip" }, move = "(monitor_w-window_w-40) (monitor_h*0.04)" })
 
 -- =====================================================================
@@ -163,7 +163,7 @@ hl.window_rule({ match = { class = "com.moonlight_stream.Moonlight" }, idle_inhi
 -- =====================================================================
 hl.window_rule({ match = { class = "com.libretro.RetroArch" }, fullscreen = true })
 hl.window_rule({ match = { class = "com.libretro.RetroArch" }, tag = "-default-opacity" })
-hl.window_rule({ match = { class = "com.libretro.RetroArch" }, opacity = { 1, 1 } })
+hl.window_rule({ match = { class = "com.libretro.RetroArch" }, opacity = "1 1" })
 hl.window_rule({ match = { class = "com.libretro.RetroArch" }, idle_inhibit = "fullscreen" })
 
 -- =====================================================================
@@ -192,4 +192,4 @@ hl.layer_rule({ match = { namespace = "selection" }, no_anim = true })
 -- Apply default opacity after apps have had a chance to opt out
 -- (was the trailing line in windows.conf)
 -- =====================================================================
-hl.window_rule({ match = { tag = "default-opacity" }, opacity = { 0.97, 0.9 } })
+hl.window_rule({ match = { tag = "default-opacity" }, opacity = "0.97 0.9" })
