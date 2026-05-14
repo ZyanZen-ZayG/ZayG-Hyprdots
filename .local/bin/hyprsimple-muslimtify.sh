@@ -52,11 +52,17 @@ waybar_has_module() {
   grep -q '"custom/muslimtify"' "$WAYBAR_CONFIG"
 }
 
+pkg_installed() {
+  pacman -Qi muslimtify >/dev/null 2>&1
+}
+
 cmd_add() {
-  command -v muslimtify >/dev/null 2>&1 || {
+  if pkg_installed; then
+    ok "muslimtify package already installed"
+  else
     info "installing muslimtify via $(pick_aur_helper)"
     "$(pick_aur_helper)" -S --noconfirm muslimtify || die "package install failed"
-  }
+  fi
 
   info "registering muslimtify daemon"
   muslimtify daemon install || true
@@ -134,9 +140,11 @@ cmd_remove() {
   info "stopping muslimtify daemon"
   muslimtify daemon stop 2>/dev/null || true
 
-  if command -v muslimtify >/dev/null 2>&1; then
+  if pkg_installed; then
     info "uninstalling muslimtify via $(pick_aur_helper)"
     "$(pick_aur_helper)" -Rns --noconfirm muslimtify || die "package removal failed"
+  else
+    ok "muslimtify package already absent — skipping uninstall"
   fi
 
   if [[ -f "$WAYBAR_CONFIG" ]] && waybar_has_module; then
