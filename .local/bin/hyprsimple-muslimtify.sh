@@ -56,6 +56,15 @@ pkg_installed() {
   pacman -Qi muslimtify >/dev/null 2>&1
 }
 
+# Returns the list of installed muslimtify-related packages (main + debug).
+installed_pkgs() {
+  local p list=()
+  for p in muslimtify muslimtify-debug; do
+    pacman -Qi "$p" >/dev/null 2>&1 && list+=("$p")
+  done
+  printf '%s\n' "${list[@]}"
+}
+
 cmd_add() {
   if pkg_installed; then
     ok "muslimtify package already installed"
@@ -142,9 +151,10 @@ cmd_remove() {
     muslimtify daemon uninstall 2>/dev/null || true
   fi
 
-  if pkg_installed; then
-    info "uninstalling muslimtify via $(pick_aur_helper)"
-    "$(pick_aur_helper)" -Rns --noconfirm muslimtify || die "package removal failed"
+  mapfile -t pkgs < <(installed_pkgs)
+  if (( ${#pkgs[@]} > 0 )); then
+    info "uninstalling ${pkgs[*]} via $(pick_aur_helper)"
+    "$(pick_aur_helper)" -Rns --noconfirm "${pkgs[@]}" || die "package removal failed"
   elif command -v muslimtify >/dev/null 2>&1; then
     bin_path="$(command -v muslimtify)"
     echo -e "${YELLOW}note:${NC} muslimtify binary at $bin_path was not installed via pacman."
