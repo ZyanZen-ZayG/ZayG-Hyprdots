@@ -137,15 +137,23 @@ CSS
 }
 
 cmd_remove() {
-  info "stopping muslimtify daemon"
-  muslimtify daemon stop 2>/dev/null || true
+  if command -v muslimtify >/dev/null 2>&1; then
+    info "unregistering muslimtify daemon (systemd units)"
+    muslimtify daemon uninstall 2>/dev/null || true
+  fi
 
   if pkg_installed; then
     info "uninstalling muslimtify via $(pick_aur_helper)"
     "$(pick_aur_helper)" -Rns --noconfirm muslimtify || die "package removal failed"
+  elif command -v muslimtify >/dev/null 2>&1; then
+    bin_path="$(command -v muslimtify)"
+    echo -e "${YELLOW}note:${NC} muslimtify binary at $bin_path was not installed via pacman."
+    echo -e "      remove it manually if you want full cleanup (e.g. sudo rm $bin_path)."
   else
-    ok "muslimtify package already absent — skipping uninstall"
+    ok "muslimtify already absent"
   fi
+
+  systemctl --user daemon-reload 2>/dev/null || true
 
   if [[ -f "$WAYBAR_CONFIG" ]] && waybar_has_module; then
     backup "$WAYBAR_CONFIG"
