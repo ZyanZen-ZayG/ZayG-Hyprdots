@@ -27,10 +27,10 @@ fi
 GEN="$THEME_PATH/generated"
 
 # 2. Update Hyprland colors
-if [[ -f "$GEN/hyprland-colors.conf" ]]; then
-  ln -sf "$GEN/hyprland-colors.conf" "$HOME/.config/hypr/theme-active.conf"
-elif [[ -f "$THEME_PATH/hypr/colors.conf" ]]; then
-  ln -sf "$THEME_PATH/hypr/colors.conf" "$HOME/.config/hypr/theme-active.conf"
+if [[ -f "$GEN/hyprland-colors.lua" ]]; then
+  ln -sf "$GEN/hyprland-colors.lua" "$HOME/.config/hypr/theme-active.lua"
+elif [[ -f "$THEME_PATH/hypr/colors.lua" ]]; then
+  ln -sf "$THEME_PATH/hypr/colors.lua" "$HOME/.config/hypr/theme-active.lua"
 fi
 
 # 3. Update Waybar colors
