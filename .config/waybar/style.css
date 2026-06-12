@@ -2,7 +2,7 @@
 
 * {
   font-family: JetbrainsMono Nerd Font;
-  font-size: 14px;
+  font-size: 12px;
   min-height: 0;
 }
 
@@ -30,25 +30,6 @@
 #workspaces button:hover {
   color: @accent-dim;
   border-radius: 1rem;
-}
-
-#custom-muslimtify {
-    background-color: @bg-widget;
-    color: @warning;
-    border: 1.5px solid alpha(@warning, 0.35);
-    border-radius: 1.5rem 1.5rem 0.3rem 0.3rem;
-    padding: 0.4rem 1.2rem;
-    margin: 5px 0 0 1rem;
-    text-shadow: 0 0 4px alpha(@warning, 0.25);
-    box-shadow: inset 0 1px 0 alpha(@warning, 0.08), 0 1px 3px alpha(@bg-deep, 0.6);
-    transition: all 300ms ease;
-}
-
-#custom-muslimtify:hover {
-    background-color: alpha(@warning, 0.15);
-    border-color: @warning;
-    text-shadow: 0 0 10px alpha(@warning, 0.6);
-    box-shadow: inset 0 1px 0 alpha(@warning, 0.15), 0 2px 8px alpha(@warning, 0.2);
 }
 
 tooltip {
@@ -173,4 +154,24 @@ tooltip label {
 #tray {
   margin-right: 1rem;
   border-radius: 1rem;
+}
+
+
+#custom-muslimtify {
+    background-color: @bg-widget;
+    color: @warning;
+    border: 1.5px solid alpha(@warning, 0.35);
+    border-radius: 1.5rem 1.5rem 0.3rem 0.3rem;
+    padding: 0.4rem 1.2rem;
+    margin: 5px 0 0 1rem;
+    text-shadow: 0 0 4px alpha(@warning, 0.25);
+    box-shadow: inset 0 1px 0 alpha(@warning, 0.08), 0 1px 3px alpha(@bg-deep, 0.6);
+    transition: all 300ms ease;
+}
+
+#custom-muslimtify:hover {
+    background-color: alpha(@warning, 0.15);
+    border-color: @warning;
+    text-shadow: 0 0 10px alpha(@warning, 0.6);
+    box-shadow: inset 0 1px 0 alpha(@warning, 0.15), 0 2px 8px alpha(@warning, 0.2);
 }

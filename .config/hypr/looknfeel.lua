@@ -3,14 +3,14 @@
 hl.config({
 	general = {
 		gaps_in = 5,
-		gaps_out = { top = 10, right = 20, bottom = 20, left = 20 },
+		gaps_out = { top = 10, right = 10, bottom = 10, left = 10 },
 		border_size = 1,
 		resize_on_border = true,
 		allow_tearing = false,
 		-- layout = "dwindle",
 	},
 	decoration = {
-		rounding = 20,
+		rounding = 12,
 		active_opacity = 1.0,
 		inactive_opacity = 0.7,
 		blur = {
@@ -31,6 +31,8 @@ hl.config({
 		disable_hyprland_logo = true,
 		disable_splash_rendering = true,
 		vrr = 0,
+		-- Open new windows (e.g. portal file pickers) on the active workspace
+		-- instead of the workspace their parent process was launched on.
 		initial_workspace_tracking = 0,
 	},
 })
