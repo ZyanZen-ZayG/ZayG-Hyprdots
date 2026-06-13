@@ -58,7 +58,14 @@ detect_and_install_nvidia() {
 
   echo -e "${GREEN}NVIDIA GPU detected: $NVIDIA${NC}"
 
-  KERNEL_HEADERS="$(pacman -Qqs '^linux(-zen|-lts|-hardened)?$' | head -1)-headers"
+  # Derive the kernel package base from the running kernel's modules dir
+  # (works for stock Arch and custom kernels like linux-cachyos-lts).
+  KERNEL_BASE="$(cat "/usr/lib/modules/$(uname -r)/pkgbase" 2>/dev/null || true)"
+  if [[ -z $KERNEL_BASE ]]; then
+    echo -e "${YELLOW}Could not detect kernel package base; skipping NVIDIA driver install. Install '<kernel>-headers' and an NVIDIA driver manually: https://wiki.archlinux.org/title/NVIDIA${NC}"
+    return 0
+  fi
+  KERNEL_HEADERS="${KERNEL_BASE}-headers"
 
   # Turing+ (GTX 16xx, RTX 20xx-50xx, RTX Pro, Quadro RTX, datacenter)
   if echo "$NVIDIA" | grep -qE "GTX 16[0-9]{2}|RTX [2-5][0-9]{3}|RTX PRO [0-9]{4}|Quadro RTX|RTX A[0-9]{4}|A[1-9][0-9]{2}|H[1-9][0-9]{2}|T4|L[0-9]+"; then
