@@ -2,7 +2,7 @@
 wlogout
 wl-mirror
 nwg-look
-wl-screenrec
+wl-screenrec-git
 muslimtify
 imagemagick
 hyprshutdown
