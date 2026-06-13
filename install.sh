@@ -298,7 +298,7 @@ echo ""
 echo -e "${YELLOW}Installing scripts to ~/.local/bin...${NC}"
 mkdir -p "$HOME/.local/bin"
 
-for script in "$DOTFILES_DIR/.local/bin"/*.sh; do
+for script in "$DOTFILES_DIR/.local/bin"/*.sh "$DOTFILES_DIR/.local/bin"/*.fish; do
   if [ -f "$script" ]; then
     target="$HOME/.local/bin/$(basename "$script")"
     backup_if_exists "$target"
@@ -382,9 +382,10 @@ echo -e "${GREEN}Theme initialized${NC}"
 mkdir -p ~/Videos
 mkdir -p ~/Pictures
 
-echo "source ~/.local/bin/bashrc.sh" >> ~/.bashrc
+# Wire the shell-init script into the rc file for the user's actual login shell
+echo -e "${YELLOW}Configuring shell integration...${NC}"
+bash "$HOME/.local/bin/terminal.sh" || true
 
-source ~/.bashrc || true
 hyprctl reload || true
 if pgrep -x waybar > /dev/null; then
   pkill waybar
