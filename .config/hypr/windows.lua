@@ -61,9 +61,12 @@ hl.window_rule({ match = { tag = "floating-window" }, float = true })
 hl.window_rule({ match = { tag = "floating-window" }, center = true })
 hl.window_rule({ match = { tag = "floating-window" }, size = { 875, 600 } })
 
+-- Float the Nautilus file manager by default (main window + Open/Save dialogs)
+hl.window_rule({ match = { class = "org.gnome.Nautilus" }, tag = "+floating-window" })
+
 hl.window_rule({
   match = {
-    class = "(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus)",
+    class = "(xdg-desktop-portal-gtk|sublime_text|DesktopEditors)",
     title = "^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to [open|save].*|[C|c]hoose.*)",
   },
   tag = "+floating-window",
