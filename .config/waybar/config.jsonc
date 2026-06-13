@@ -1,6 +1,8 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar position (top|bottom|left|right)
+    // clock module (incl. themed calendar colors) is generated per-theme; see theme-clock.jsonc
+    "include": ["~/.config/waybar/theme-clock.jsonc"],
     // "width": 1280, // Waybar width
     // Choose the order of the modules
     "modules-left": ["hyprland/workspaces", "custom/muslimtify"],
@@ -53,12 +55,6 @@
         "max-length": 10,
         "tooltip": true,
         "tooltip-format": "󰾆 {percentage}%\n {used:0.1f}GB/{total:0.1f}GB"
-    },
-    "clock": {
-        "timezone": "Asia/Jakarta",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "󰸗 {:%d/%m/%Y}",
-        "format": "󰥔 {:%H:%M}"
     },
     "backlight": {
         "device": "intel_backlight",
