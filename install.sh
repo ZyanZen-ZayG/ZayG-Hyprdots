@@ -67,9 +67,21 @@ detect_and_install_nvidia() {
   fi
   KERNEL_HEADERS="${KERNEL_BASE}-headers"
 
+  # Prefer a prebuilt kernel module if the repos ship one for this kernel
+  # (e.g. CachyOS's linux-cachyos-nvidia-open) — avoids a DKMS rebuild and the
+  # conflict between nvidia-open-dkms and the prebuilt NVIDIA-MODULE provider.
+  NVIDIA_OPEN_PREBUILT=""
+  if pacman -Si "${KERNEL_BASE}-nvidia-open" &>/dev/null; then
+    NVIDIA_OPEN_PREBUILT="${KERNEL_BASE}-nvidia-open"
+  fi
+
   # Turing+ (GTX 16xx, RTX 20xx-50xx, RTX Pro, Quadro RTX, datacenter)
   if echo "$NVIDIA" | grep -qE "GTX 16[0-9]{2}|RTX [2-5][0-9]{3}|RTX PRO [0-9]{4}|Quadro RTX|RTX A[0-9]{4}|A[1-9][0-9]{2}|H[1-9][0-9]{2}|T4|L[0-9]+"; then
-    NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-open-dkms nvidia-utils libva-nvidia-driver)
+    if [[ -n $NVIDIA_OPEN_PREBUILT ]]; then
+      NVIDIA_PACKAGES=("$NVIDIA_OPEN_PREBUILT" nvidia-utils libva-nvidia-driver)
+    else
+      NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-open-dkms nvidia-utils libva-nvidia-driver)
+    fi
     GPU_ARCH="turing_plus"
   # Maxwell/Pascal/Volta (GTX 9xx/10xx, Quadro P/M, MX, Titan X/Xp/V)
   elif echo "$NVIDIA" | grep -qE "GTX (9[0-9]{2}|10[0-9]{2})|GT 10[0-9]{2}|Quadro [PM][0-9]{3,4}|Quadro GV100|MX *[0-9]+|Titan (X|Xp|V)|Tesla V100"; then
