@@ -4,46 +4,58 @@
 hl.window_rule({ match = { class = ".*" }, suppress_event = "maximize" })
 hl.window_rule({ match = { class = ".*" }, tag = "+default-opacity" })
 hl.window_rule({
-  match = { class = "^$", title = "^$", xwayland = true, float = true, fullscreen = false, pin = false },
-  no_focus = true,
+	match = { class = "^$", title = "^$", xwayland = true, float = true, fullscreen = false, pin = false },
+	no_focus = true,
 })
 
 -- =====================================================================
 -- steam (was windows/steam.conf)
 -- =====================================================================
-hl.window_rule({ match = { class = "steam" },                        float = true })
-hl.window_rule({ match = { class = "steam", title = "Steam" },       center = true })
-hl.window_rule({ match = { class = "steam.*" },                      tag = "-default-opacity" })
-hl.window_rule({ match = { class = "steam.*" },                      opacity = "1 1" })
-hl.window_rule({ match = { class = "steam", title = "Steam" },       size = { 1100, 700 } })
-hl.window_rule({ match = { class = "steam", title = "Friends List" },size = { 460, 800 } })
-hl.window_rule({ match = { class = "steam" },                        idle_inhibit = "fullscreen" })
+hl.window_rule({ match = { class = "steam" }, float = true })
+hl.window_rule({ match = { class = "steam", title = "Steam" }, center = true })
+hl.window_rule({ match = { class = "steam.*" }, tag = "-default-opacity" })
+hl.window_rule({ match = { class = "steam.*" }, opacity = "1 1" })
+hl.window_rule({ match = { class = "steam", title = "Steam" }, size = { 1100, 700 } })
+hl.window_rule({ match = { class = "steam", title = "Friends List" }, size = { 460, 800 } })
+hl.window_rule({ match = { class = "steam" }, idle_inhibit = "fullscreen" })
 
 -- =====================================================================
 -- browser (was windows/browser.conf)
 -- =====================================================================
-hl.window_rule({ match = { class = "((google-)?[cC]hrom(e|ium)|[bB]rave-browser|[mM]icrosoft-edge|Vivaldi-stable|helium)" }, tag = "+chromium-based-browser" })
-hl.window_rule({ match = { class = "([fF]irefox|zen|librewolf)" },                                                            tag = "+firefox-based-browser" })
-hl.window_rule({ match = { tag   = "chromium-based-browser" }, tag = "-default-opacity" })
-hl.window_rule({ match = { tag   = "firefox-based-browser" },  tag = "-default-opacity" })
+hl.window_rule({
+	match = { class = "((google-)?[cC]hrom(e|ium)|[bB]rave-browser|[mM]icrosoft-edge|Vivaldi-stable|helium)" },
+	tag = "+chromium-based-browser",
+})
+hl.window_rule({
+	match = { class = "([fF]irefox|zen|librewolf)" },
+	tag = "+firefox-based-browser",
+})
+hl.window_rule({ match = { tag = "chromium-based-browser" }, tag = "-default-opacity" })
+hl.window_rule({ match = { tag = "firefox-based-browser" }, tag = "-default-opacity" })
 
 -- Video apps: strip chromium-based-browser tag so they don't get opacity applied
-hl.window_rule({ match = { class = "(chrome-youtube.com__-Default|chrome-app.zoom.us__wc_home-Default)" }, tag = "-chromium-based-browser" })
-hl.window_rule({ match = { class = "(chrome-youtube.com__-Default|chrome-app.zoom.us__wc_home-Default)" }, tag = "-default-opacity" })
+hl.window_rule({
+	match = { class = "(chrome-youtube.com__-Default|chrome-app.zoom.us__wc_home-Default)" },
+	tag = "-chromium-based-browser",
+})
+hl.window_rule({
+	match = { class = "(chrome-youtube.com__-Default|chrome-app.zoom.us__wc_home-Default)" },
+	tag = "-default-opacity",
+})
 
 -- Force chromium-based browsers into a tile (chromium --app bug workaround)
 hl.window_rule({ match = { tag = "chromium-based-browser" }, tile = true })
 
 -- Subtle opacity, but not for video sites
 hl.window_rule({ match = { tag = "chromium-based-browser" }, opacity = "1.0 0.97" })
-hl.window_rule({ match = { tag = "firefox-based-browser" },  opacity = "1.0 0.97" })
+hl.window_rule({ match = { tag = "firefox-based-browser" }, opacity = "1.0 0.97" })
 
 -- =====================================================================
 -- terminal (was windows/terminal.conf)
 -- =====================================================================
 hl.window_rule({ match = { class = "(Alacritty|kitty|com.mitchellh.ghostty)" }, tag = "+terminal" })
-hl.window_rule({ match = { tag = "terminal" },                                  tag = "-default-opacity" })
-hl.window_rule({ match = { tag = "terminal" },                                  opacity = "0.97 0.9" })
+hl.window_rule({ match = { tag = "terminal" }, tag = "-default-opacity" })
+hl.window_rule({ match = { tag = "terminal" }, opacity = "0.97 0.9" })
 
 -- =====================================================================
 -- webcam (was windows/webcam.conf)
@@ -65,20 +77,30 @@ hl.window_rule({ match = { tag = "floating-window" }, size = { 875, 600 } })
 hl.window_rule({ match = { class = "org.gnome.Nautilus" }, tag = "+floating-window" })
 
 hl.window_rule({
-  match = {
-    class = "(xdg-desktop-portal-gtk|sublime_text|DesktopEditors)",
-    title = "^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to [open|save].*|[C|c]hoose.*)",
-  },
-  tag = "+floating-window",
+	match = {
+		class = "(xdg-desktop-portal-gtk|sublime_text|DesktopEditors)",
+		title = "^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files|.*wants to [open|save].*|[C|c]hoose.*)",
+	},
+	tag = "+floating-window",
 })
 hl.window_rule({ match = { class = "org.gnome.Calculator" }, float = true })
 
 -- No transparency on media windows
-hl.window_rule({ match = { class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$" }, tag = "-default-opacity" })
-hl.window_rule({ match = { class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$" }, opacity = "1 1" })
+hl.window_rule({
+	match = {
+		class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$",
+	},
+	tag = "-default-opacity",
+})
+hl.window_rule({
+	match = {
+		class = "^(zoom|vlc|mpv|org.kde.kdenlive|com.obsproject.Studio|com.github.PintaProject.Pinta|imv|org.gnome.NautilusPreviewer)$",
+	},
+	opacity = "1 1",
+})
 
 -- Pop / no-idle tags
-hl.window_rule({ match = { tag = "pop" },    rounding = 4 })
+hl.window_rule({ match = { tag = "pop" }, rounding = 4 })
 hl.window_rule({ match = { tag = "noidle" }, idle_inhibit = "always" })
 
 -- =====================================================================
@@ -89,43 +111,43 @@ hl.window_rule({ match = { tag = "noidle" }, idle_inhibit = "always" })
 -- geforce (was windows/geforce.conf)
 -- =====================================================================
 hl.window_rule({
-  name = "geforce",
-  match = { class = "GeForceNOW" },
-  idle_inhibit = "fullscreen",
+	name = "geforce",
+	match = { class = "GeForceNOW" },
+	idle_inhibit = "fullscreen",
 })
 
 -- =====================================================================
 -- jetbrains (was windows/jetbrains.conf)
 -- =====================================================================
 hl.window_rule({
-  name = "jetbrains-splash",
-  match = { class = "^(jetbrains-.*)$", title = "^(splash)$", float = true },
-  tag = "+jetbrains-splash",
-  center = true,
-  no_focus = true,
-  border_size = 0,
+	name = "jetbrains-splash",
+	match = { class = "^(jetbrains-.*)$", title = "^(splash)$", float = true },
+	tag = "+jetbrains-splash",
+	center = true,
+	no_focus = true,
+	border_size = 0,
 })
 
 hl.window_rule({
-  name = "jetbrains-popup",
-  match = { class = "^(jetbrains-.*)", title = "^()$", float = true },
-  tag = "+jetbrains",
-  center = true,
-  stay_focused = true,
-  border_size = 0,
-  min_size = "(monitor_w*0.5) (monitor_h*0.5)",
+	name = "jetbrains-popup",
+	match = { class = "^(jetbrains-.*)", title = "^()$", float = true },
+	tag = "+jetbrains",
+	center = true,
+	stay_focused = true,
+	border_size = 0,
+	min_size = "(monitor_w*0.5) (monitor_h*0.5)",
 })
 
 hl.window_rule({
-  name = "jetbrains-tooltip",
-  match = { class = "^(jetbrains-.*)$", title = "^(win.*)$", float = true },
-  no_initial_focus = true,
+	name = "jetbrains-tooltip",
+	match = { class = "^(jetbrains-.*)$", title = "^(win.*)$", float = true },
+	no_initial_focus = true,
 })
 
 hl.window_rule({
-  name = "jetbrains-focus",
-  match = { class = "^(jetbrains-.*)$" },
-  no_follow_mouse = true,
+	name = "jetbrains-focus",
+	match = { class = "^(jetbrains-.*)$" },
+	no_follow_mouse = true,
 })
 
 -- =====================================================================
@@ -137,8 +159,8 @@ hl.window_rule({ match = { class = "qemu" }, opacity = "1 1" })
 -- =====================================================================
 -- emulator (was windows/emulator.conf)
 -- =====================================================================
-hl.window_rule({ match = { class = "^(Emulator)$",         title = "^(Emulator)$" },         float = true })
-hl.window_rule({ match = { class = "^(Emulator)$",         title = "^(Emulator)$" },         center = true })
+hl.window_rule({ match = { class = "^(Emulator)$", title = "^(Emulator)$" }, float = true })
+hl.window_rule({ match = { class = "^(Emulator)$", title = "^(Emulator)$" }, center = true })
 hl.window_rule({ match = { class = "^(Android Emulator)$", title = "^(Android Emulator.*)$" }, float = true })
 hl.window_rule({ match = { class = "^(Android Emulator)$", title = "^(Android Emulator.*)$" }, center = true })
 
@@ -179,7 +201,7 @@ hl.window_rule({ match = { class = ".*[Rr]esolve.*", float = true }, stay_focuse
 -- =====================================================================
 hl.window_rule({ match = { class = "(Share|localsend)" }, float = true })
 hl.window_rule({ match = { class = "(Share|localsend)" }, center = true })
-hl.window_rule({ match = { class = "localsend" },         size = { 1100, 700 } })
+hl.window_rule({ match = { class = "localsend" }, size = { 1100, 700 } })
 
 -- =====================================================================
 -- telegram (was windows/telegram.conf)
