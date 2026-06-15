@@ -93,16 +93,17 @@ hyprsimple ships an optional RNNoise filter that creates a virtual
 provided by the `noise-suppression-for-voice` package and configured in
 `~/.config/pipewire/pipewire.conf.d/99-input-denoising.conf`.
 
-It is **not** the default input out of the box (forcing it would hijack
-USB / Bluetooth / multi-mic setups). To start using it:
+`install.sh` makes this the **default microphone** automatically (via
+`wpctl set-default`, which WirePlumber remembers across reboots), so Teams,
+Discord, etc. use the denoised mic out of the box. To switch back to the raw
+mic, or to re-select the denoised one later:
 
 ```bash
-wpctl status                 # find the ID of "Noise Suppressed Source"
+wpctl status                 # find the ID of "Noise Suppressed Source" (or your raw mic)
 wpctl set-default <ID>       # WirePlumber remembers this across reboots
 ```
 
-Then pick **"Noise Suppressed Source"** as the microphone in your app (Teams,
-Discord, etc.). Tune aggressiveness via `"VAD Threshold (%)"` in the conf file
+Tune aggressiveness via `"VAD Threshold (%)"` in the conf file
 (higher = cuts more noise but may clip the start of words); reload with:
 
 ```bash
