@@ -85,3 +85,40 @@ grep HOOKS /etc/mkinitcpio.conf   # no 'plymouth'
 
 > [!NOTE]
 > Reference: [CachyOS forum — "Disable or remove Plymouth boot splash"](https://discuss.cachyos.org/t/tutorial-disable-or-remove-plymouth-boot-splash/10922)
+
+## Microphone sounds noisy / hissy on calls (RNNoise noise suppression)
+
+hyprsimple ships an optional RNNoise filter that creates a virtual
+**"Noise Suppressed Source"** — a denoised copy of your microphone. It is
+provided by the `noise-suppression-for-voice` package and configured in
+`~/.config/pipewire/pipewire.conf.d/99-input-denoising.conf`.
+
+`install.sh` makes this the **default microphone** automatically (via
+`wpctl set-default`, which WirePlumber remembers across reboots), so Teams,
+Discord, etc. use the denoised mic out of the box. To switch back to the raw
+mic, or to re-select the denoised one later:
+
+```bash
+wpctl status                 # find the ID of "Noise Suppressed Source" (or your raw mic)
+wpctl set-default <ID>       # WirePlumber remembers this across reboots
+```
+
+Tune aggressiveness via `"VAD Threshold (%)"` in the conf file
+(higher = cuts more noise but may clip the start of words); reload with:
+
+```bash
+systemctl --user restart pipewire pipewire-pulse wireplumber
+```
+
+> [!NOTE]
+> If your mic is **distorted/clipping** rather than just noisy, the cause is
+> usually a hardware capture gain set too high — RNNoise can't fix a clipped
+> signal. Check `alsamixer` (F4 → Capture view) and lower **Capture** and any
+> **Mic Boost** controls, then `sudo alsactl store` to persist. Bluetooth
+> headset mics are a separate case: they only provide a mic in the low-quality
+> HSP/HFP profile, so prefer a wired/built-in mic for input and keep the
+> headset on A2DP for output.
+>
+> After any `pipewire` restart, also restart the portals or screen sharing can
+> break until they reconnect:
+> `systemctl --user restart xdg-desktop-portal xdg-desktop-portal-hyprland`

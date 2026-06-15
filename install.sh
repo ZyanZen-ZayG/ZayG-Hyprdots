@@ -273,6 +273,38 @@ setup_battery() {
   fi
 }
 
+# RNNoise microphone denoising: make the shipped "Noise Suppressed Source"
+# (see ~/.config/pipewire/pipewire.conf.d/99-input-denoising.conf) the default
+# input so apps like Teams/Discord use the cleaned-up mic automatically.
+setup_microphone_denoising() {
+  echo -e "${YELLOW}Setting up RNNoise microphone denoising...${NC}"
+
+  if [[ ! -f /usr/lib/ladspa/librnnoise_ladspa.so ]]; then
+    echo -e "${YELLOW}RNNoise plugin not found; skipping (needs noise-suppression-for-voice)${NC}"
+    return 0
+  fi
+
+  # Reload PipeWire so the freshly-copied filter-chain config loads now
+  # (it also auto-loads on next login).
+  systemctl --user restart pipewire pipewire-pulse wireplumber 2>/dev/null || true
+
+  # Wait for the virtual source to appear, then make it the default input.
+  # wpctl persists this by node name, so it survives reboots.
+  local id="" i
+  for i in $(seq 1 15); do
+    id="$(wpctl status 2>/dev/null | grep 'Noise Suppressed Source' | grep -oE '[0-9]+' | head -1 || true)"
+    [[ -n $id ]] && break
+    sleep 1
+  done
+
+  if [[ -n $id ]]; then
+    wpctl set-default "$id" 2>/dev/null || true
+    echo -e "${GREEN}RNNoise set as default microphone (persists across reboots)${NC}"
+  else
+    echo -e "${YELLOW}Noise Suppressed Source not detected; enable later with 'wpctl set-default <id>' (see FAQ.md)${NC}"
+  fi
+}
+
 echo -e "${YELLOW}Setting up services...${NC}"
 setup_bluetooth || true
 setup_network || true
@@ -362,6 +394,10 @@ echo ""
 echo ""
 echo -e "${YELLOW}Enabling system services...${NC}"
 systemctl --user enable --now pipewire pipewire-pulse wireplumber || true
+
+# Make the RNNoise "Noise Suppressed Source" the default mic (runs after
+# PipeWire is up so the virtual node exists).
+setup_microphone_denoising || true
 
 # Enable battery monitor timer (if systemd files exist)
 if [ -f "$HOME/.config/systemd/user/battery-monitor.timer" ]; then
