@@ -103,8 +103,7 @@
         "scroll-step": 5,
         "format-icons": {
             "default": ["", "", " "]
-        },
-        "on-click": "pavucontrol"
+        }
     },
     "pulseaudio#microphone": {
         "format": "{format_source}",

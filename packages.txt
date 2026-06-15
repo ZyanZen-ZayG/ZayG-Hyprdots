@@ -59,6 +59,7 @@ pipewire-audio
 pipewire-pulse
 wireplumber
 alsa-utils
+noise-suppression-for-voice
 ffmpeg
 swayimg
 
