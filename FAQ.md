@@ -110,11 +110,20 @@ Tune aggressiveness via `"VAD Threshold (%)"` in the conf file
 systemctl --user restart pipewire pipewire-pulse wireplumber
 ```
 
+**Too quiet, or clipping/distorted?** Run `mic-tune.sh` — an interactive tuner
+for all the mic level parameters (hardware capture gain, mic boost, and the raw
+/ RNNoise software volumes). It auto-detects your devices and includes a
+record-and-measure test that tells you whether you are clipping or too quiet, so
+you can dial in a clean level. Note that WirePlumber may manage the hardware
+**Capture** control (resetting it toward max), so the software volumes are the
+most dependable knobs.
+
 > [!NOTE]
 > If your mic is **distorted/clipping** rather than just noisy, the cause is
 > usually a hardware capture gain set too high — RNNoise can't fix a clipped
-> signal. Check `alsamixer` (F4 → Capture view) and lower **Capture** and any
-> **Mic Boost** controls, then `sudo alsactl store` to persist. Bluetooth
+> signal. Use `mic-tune.sh` (above) or `alsamixer` (F4 → Capture view) to lower
+> **Capture** and any **Mic Boost** controls, then `sudo alsactl store` to
+> persist. Bluetooth
 > headset mics are a separate case: they only provide a mic in the low-quality
 > HSP/HFP profile, so prefer a wired/built-in mic for input and keep the
 > headset on A2DP for output.
