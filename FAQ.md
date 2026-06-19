@@ -95,8 +95,12 @@ provided by the `noise-suppression-for-voice` package and configured in
 
 `install.sh` makes this the **default microphone** automatically (via
 `wpctl set-default`, which WirePlumber remembers across reboots), so Teams,
-Discord, etc. use the denoised mic out of the box. To switch back to the raw
-mic, or to re-select the denoised one later:
+Discord, etc. use the denoised mic out of the box. It also applies a set of
+**starting mic levels** (capture gain, mic boost, and the raw / RNNoise software
+volumes). These are tuned for a typical built-in laptop mic — sensitivity varies
+per machine, so if you clip or sound too quiet, adjust them with `mic-tune.sh`.
+
+To switch back to the raw mic, or to re-select the denoised one later:
 
 ```bash
 wpctl status                 # find the ID of "Noise Suppressed Source" (or your raw mic)

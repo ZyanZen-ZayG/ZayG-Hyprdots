@@ -303,6 +303,36 @@ setup_microphone_denoising() {
   else
     echo -e "${YELLOW}Noise Suppressed Source not detected; enable later with 'wpctl set-default <id>' (see FAQ.md)${NC}"
   fi
+
+  # --- Tuned starting mic levels --------------------------------------------
+  # Sane defaults for a typical built-in laptop mic. Mic sensitivity varies per
+  # machine, so verify with 'mic-tune.sh' and adjust if you clip or sound too
+  # quiet. (Capture is set for completeness; WirePlumber manages it and forces
+  # it toward 100% regardless.)
+  local TARGET_CAPTURE=100      # ALSA hardware capture gain (%)
+  local TARGET_MIC_BOOST=33     # ALSA mic boost (% — ~+10dB on a 0-3 control)
+  local TARGET_RAW_VOL=50       # raw hardware mic software volume (%)
+  local TARGET_RNNOISE_VOL=40   # "Noise Suppressed Source" software volume (%)
+
+  local hw_src card boost
+  hw_src="$(pactl list sources short 2>/dev/null | awk '/alsa_input/{print $2; exit}')"
+  card="$(pactl list sources 2>/dev/null \
+        | awk -v s="$hw_src" '$0 ~ "Name: "s{f=1} f&&/alsa.card =/{gsub(/[^0-9]/,"");print;exit}')"
+  card="${card:-0}"
+
+  amixer -c "$card" sset "Capture" "${TARGET_CAPTURE}%" >/dev/null 2>&1 || true
+  for boost in "Internal Mic Boost" "Mic Boost" "Front Mic Boost" "Boost"; do
+    if amixer -c "$card" sget "$boost" &>/dev/null; then
+      amixer -c "$card" sset "$boost" "${TARGET_MIC_BOOST}%" >/dev/null 2>&1 || true
+      break
+    fi
+  done
+  sudo alsactl store >/dev/null 2>&1 || true   # persist ALSA gains across reboot
+
+  [[ -n $hw_src ]] && pactl set-source-volume "$hw_src" "${TARGET_RAW_VOL}%" 2>/dev/null || true
+  pactl set-source-volume rnnoise_source "${TARGET_RNNOISE_VOL}%" 2>/dev/null || true
+
+  echo -e "${GREEN}Applied starting mic levels (capture/boost + software volumes); fine-tune with mic-tune.sh${NC}"
 }
 
 echo -e "${YELLOW}Setting up services...${NC}"
