@@ -7,3 +7,4 @@ muslimtify
 imagemagick
 hyprshutdown
 hyprqt6engine
+brave-bin

@@ -65,7 +65,7 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | Key | Action |
 |-----|--------|
 | `SUPER + T` | Open terminal (Ghostty) |
-| `SUPER + B` | Open browser (Firefox) |
+| `SUPER + B` | Open browser (Brave) |
 | `SUPER + A` | App launcher (Rofi) |
 | `SUPER + F` | File manager (Nautilus) |
 | `SUPER + O` | Notes (Obsidian) |
