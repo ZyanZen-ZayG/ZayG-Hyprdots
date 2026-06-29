@@ -151,6 +151,93 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + CTRL + V` | Toggle virtual mirror |
 | `SUPER + /` | Show all keybindings |
 
+## Scripts
+
+Helper scripts live in [`.local/bin`](.local/bin) (installed to `~/.local/bin`, which is on `PATH`).
+Most are wired to keybindings or waybar; all can also be run directly from a terminal.
+
+### Audio
+
+| Script | Description |
+|--------|-------------|
+| `audio-switch.sh` | Cycle through available audio output devices |
+| `volume-notify.sh` | Show the current PipeWire volume via a dunst notification |
+| `mic-tune.sh` | Interactive microphone + RNNoise level tuner (ADC gain, mic boost, software volumes) with a record-and-measure test |
+| `record-audio.sh` | Record audio from the default input to `~/Music` |
+
+### Display, Theme & Wallpaper
+
+| Script | Description |
+|--------|-------------|
+| `brightness-notify.sh` | Show the current screen brightness via a dunst notification |
+| `keyboard-brightness.sh` | Control the keyboard backlight (`up` / `down` / `cycle`) |
+| `toggle-nightlight.sh` | Toggle a warm screen temperature via hyprsunset |
+| `theme-switcher.sh` | Switch theme via rofi picker, or apply one directly by name |
+| `theme-apply-templates.sh` | Generate themed app configs from a theme's `colors.toml` |
+| `wallpaper-switcher.sh` | Switch or cycle wallpaper within the current theme |
+| `live-wallpaper-toggle.sh` | Toggle live wallpaper (cycle backgrounds vs. static) |
+| `monitor-mirror-toggle.sh` | Toggle extend vs. mirror mode for an external monitor |
+| `virtual-mirror-toggle.sh` | Mirror a monitor into a window (via wl-mirror) for screen sharing |
+
+### Screenshot & Recording
+
+| Script | Description |
+|--------|-------------|
+| `screenshot.sh` | Take a screenshot (`clipboard` / `window` / `region` / `monitor`) |
+| `screen-record.sh` | Start/stop screen recording (region or output; mic, internal, or no audio) |
+| `screen-record-active.sh` | Report whether a screen recording is currently running |
+
+### Network
+
+| Script | Description |
+|--------|-------------|
+| `wifi.sh` | List and connect to WiFi networks |
+| `wifi-powersave.sh` | Toggle WiFi power saving (`on` / `off`) |
+| `hotspot.sh` | Create a WiFi hotspot with internet sharing |
+| `setup-dns.sh` | Configure the DNS provider (Cloudflare / Google / DHCP) |
+
+### System & Power
+
+| Script | Description |
+|--------|-------------|
+| `battery-monitor.sh` | Low-battery notifications and automatic brightness reduction |
+| `bluetooth-toggle.sh` | Toggle Bluetooth adapter power |
+| `toggle_cpu_mode.sh` | Switch CPU governor between performance and powersave |
+| `toggle-idle.sh` | Toggle hypridle (lock-on-idle) on/off |
+| `hypr-logout.sh` | Gracefully close all windows and stop the Hyprland session |
+
+### Input & Notifications
+
+| Script | Description |
+|--------|-------------|
+| `capslock-notify.sh` | Notify on Caps Lock state changes |
+| `notification-dismiss.sh` | Dismiss all dunst notifications |
+
+### Search & Keybindings
+
+| Script | Description |
+|--------|-------------|
+| `search.sh` | Fuzzy file finder (ripgrep + fzf) that opens the result in nvim |
+| `search_by_keyword.sh` | Fuzzy content search (ripgrep + fzf) that opens the match in nvim |
+| `show-keybindings.sh` | Show all Hyprland keybindings in a rofi fuzzy-search menu |
+
+### Integrations
+
+| Script | Description |
+|--------|-------------|
+| `hyprsimple-muslimtify.sh` | Add or remove the [muslimtify](https://github.com/rizukirr/muslimtify) prayer-times integration |
+| `waybar-muslimtify.sh` | Provide the waybar module output (next prayer + tooltip) for muslimtify |
+
+### Shell init & internal helpers
+
+These are sourced by other files rather than run directly.
+
+| Script | Description |
+|--------|-------------|
+| `bashrc.sh` / `zsh.sh` / `fish.fish` | Per-shell init (zoxide, fzf, starship, aliases) sourced from your shell's rc file |
+| `terminal.sh` | Detect your login shell and wire the matching init script into its rc file |
+| `hypr-helpers.sh` | Shared hyprpaper helper functions used by the wallpaper scripts |
+
 ## FAQ
 
 Troubleshooting and known issues (NVIDIA boot hang, Plymouth blank-screen splash, and
