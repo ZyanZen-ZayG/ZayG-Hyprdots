@@ -89,21 +89,16 @@ grep HOOKS /etc/mkinitcpio.conf   # no 'plymouth'
 ## Microphone sounds noisy / hissy on calls (RNNoise noise suppression)
 
 hyprsimple ships an optional RNNoise filter that creates a virtual
-**"Noise Suppressed Source"** — a denoised copy of your microphone. It is
+**"Noise Canceling source"** — a denoised copy of your microphone. It is
 provided by the `noise-suppression-for-voice` package and configured in
 `~/.config/pipewire/pipewire.conf.d/99-input-denoising.conf`.
 
-`install.sh` makes this the **default microphone** automatically (via
-`wpctl set-default`, which WirePlumber remembers across reboots), so Teams,
-Discord, etc. use the denoised mic out of the box. It also applies a set of
-**starting mic levels** (capture gain, mic boost, and the raw / RNNoise software
-volumes). These are tuned for a typical built-in laptop mic — sensitivity varies
-per machine, so if you clip or sound too quiet, adjust them with `mic-tune.sh`.
-
-To switch back to the raw mic, or to re-select the denoised one later:
+This is **not** forced as your default input, so it never hijacks a USB,
+Bluetooth, or multi-mic setup. To start using it, pick it as the default mic —
+WirePlumber remembers the choice across reboots:
 
 ```bash
-wpctl status                 # find the ID of "Noise Suppressed Source" (or your raw mic)
+wpctl status                 # find the ID of "Noise Canceling source" (or your raw mic)
 wpctl set-default <ID>       # WirePlumber remembers this across reboots
 ```
 
@@ -114,20 +109,11 @@ Tune aggressiveness via `"VAD Threshold (%)"` in the conf file
 systemctl --user restart pipewire pipewire-pulse wireplumber
 ```
 
-**Too quiet, or clipping/distorted?** Run `mic-tune.sh` — an interactive tuner
-for all the mic level parameters (hardware capture gain, mic boost, and the raw
-/ RNNoise software volumes). It auto-detects your devices and includes a
-record-and-measure test that tells you whether you are clipping or too quiet, so
-you can dial in a clean level. Note that WirePlumber may manage the hardware
-**Capture** control (resetting it toward max), so the software volumes are the
-most dependable knobs.
-
 > [!NOTE]
 > If your mic is **distorted/clipping** rather than just noisy, the cause is
 > usually a hardware capture gain set too high — RNNoise can't fix a clipped
-> signal. Use `mic-tune.sh` (above) or `alsamixer` (F4 → Capture view) to lower
-> **Capture** and any **Mic Boost** controls, then `sudo alsactl store` to
-> persist. Bluetooth
+> signal. Use `alsamixer` (F4 → Capture view) to lower **Capture** and any
+> **Mic Boost** controls, then `sudo alsactl store` to persist. Bluetooth
 > headset mics are a separate case: they only provide a mic in the low-quality
 > HSP/HFP profile, so prefer a wired/built-in mic for input and keep the
 > headset on A2DP for output.

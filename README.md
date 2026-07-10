@@ -158,7 +158,6 @@ Most are wired to keybindings or waybar; all can also be run directly from a ter
 |--------|-------------|
 | `audio-switch.sh` | Cycle through available audio output devices |
 | `volume-notify.sh` | Show the current PipeWire volume via a dunst notification |
-| `mic-tune.sh` | Interactive microphone + RNNoise level tuner (ADC gain, mic boost, software volumes) with a record-and-measure test |
 | `record-audio.sh` | Record audio from the default input to `~/Music` |
 
 ### Display, Theme & Wallpaper
