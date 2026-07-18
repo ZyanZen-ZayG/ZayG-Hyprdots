@@ -228,6 +228,18 @@ setup_bluetooth() {
     sudo systemctl enable bluetooth.service
     echo -e "${GREEN}Bluetooth enabled${NC}"
   fi
+
+  # ZZ: RTL8723BE fix (HP ProBook 450 G3)
+  # ant_sel=2 forces correct antenna (fixes low range)
+  # fwlps=0 disables firmware power save (improves stability)
+  # ips=0 disables link power save (prevents BT drops)
+  if lsmod | grep -q rtl8723be || lspci | grep -qi "RTL8723"; then
+    echo -e "${YELLOW}RTL8723BE detected, applying Bluetooth fix...${NC}"
+    sudo cp "$DOTFILES_DIR/etc/modprobe.d/rtl8723be.conf" /etc/modprobe.d/rtl8723be.conf
+    sudo modprobe -r rtl8723be 2>/dev/null || true
+    sudo modprobe rtl8723be ant_sel=2 fwlps=0 ips=0 2>/dev/null || true
+    echo -e "${GREEN}RTL8723BE fix applied${NC}"
+  fi
 }
 
 setup_network() {
