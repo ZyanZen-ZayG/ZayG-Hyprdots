@@ -134,7 +134,6 @@ detect_and_install_vulkan() {
       echo -e "${GREEN}Detected $vendor GPU, adding ${VULKAN_DRIVERS[$vendor]}${NC}"
       VULKAN_PACKAGES+=("${VULKAN_DRIVERS[$vendor]}")
     fi
-  done
 
   if (( ${#VULKAN_PACKAGES[@]} > 0 )); then
     sudo pacman -S --needed --noconfirm "${VULKAN_PACKAGES[@]}" || true
@@ -336,7 +335,6 @@ for item in "$DOTFILES_DIR/.config"/*; do
     cp "$item" "$target"
     echo -e "${GREEN}Copied:${NC} $basename_item"
   fi
-done
 
 # Copy scripts
 echo ""
@@ -351,7 +349,6 @@ for script in "$DOTFILES_DIR/.local/bin"/*.sh "$DOTFILES_DIR/.local/bin"/*.fish;
     chmod +x "$target"
     echo -e "${GREEN}Copied:${NC} $(basename "$script")"
   fi
-done
 
 # ZZ: Copy .bashrc
 if [ -f "$DOTFILES_DIR/.bashrc" ]; then
@@ -359,7 +356,6 @@ if [ -f "$DOTFILES_DIR/.bashrc" ]; then
   cp "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
   echo -e "${GREEN}Copied:${NC} .bashrc"
 fi
-done
 
 # Copy .local/share assets
 if [ -d "$DOTFILES_DIR/.local/share" ]; then
@@ -375,7 +371,6 @@ if [ -d "$DOTFILES_DIR/.local/share" ]; then
       echo -e "${GREEN}Copied:${NC} .local/share/$basename_item"
     fi
   done
-fi
 
 # ======================================
 #  Hardware Auto-Detection
