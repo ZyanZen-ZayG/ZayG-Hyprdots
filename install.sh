@@ -58,6 +58,422 @@ detect_and_install_nvidia() {
 
   echo -e "${GREEN}NVIDIA GPU detected: $NVIDIA${NC}"
 
+  KERNEL_BASE="$(cat "/usr/lib/modules/$(uname -r)/pkgbase" 2>/dev/null || true)"
+  if [[ -z $KERNEL_BASE ]]; then
+    echo -e "${YELLOW}Could not detect kernel package base; skipping NVIDIA driver install. Install '<kernel>-headers' and an NVIDIA driver manually: https://wiki.archlinux.org/title/NVIDIA${NC}"
+    return 0
+  fi
+  KERNEL_HEADERS="${KERNEL_BASE}-headers"
+
+  NVIDIA_OPEN_PREBUILT=""
+  if pacman -Si "${KERNEL_BASE}-nvidia-open" &>/dev/null; then
+    NVIDIA_OPEN_PREBUILT="${KERNEL_BASE}-nvidia-open"
+  fi
+
+  if echo "$NVIDIA" | grep -qE "GTX 16[0-9]{2}|RTX [2-5][0-9]{3}|RTX PRO [0-9]{4}|Quadro RTX|RTX A[0-9]{4}|A[1-9][0-9]{2}|H[1-9][0-9]{2}|T4|L[0-9]+"; then
+    if [[ -n $NVIDIA_OPEN_PREBUILT ]]; then
+      NVIDIA_PACKAGES=("$NVIDIA_OPEN_PREBUILT" nvidia-utils libva-nvidia-driver)
+    else
+      NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-open-dkms nvidia-utils libva-nvidia-driver)
+    fi
+    GPU_ARCH="turing_plus"
+  elif echo "$NVIDIA" | grep -qE "GTX (9[0-9]{2}|10[0-9]{2})|GT 10[0-9]{2}|Quadro [PM][0-9]{3,4}|Quadro GV100|MX *[0-9]+|Titan (X|Xp|V)|Tesla V100"; then
+    NVIDIA_PACKAGES=("$KERNEL_HEADERS" nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils)
+    GPU_ARCH="maxwell_pascal_volta"
+  else
+    echo -e "${YELLOW}No compatible NVIDIA driver found. See: https://wiki.archlinux.org/title/NVIDIA${NC}"
+    return 0
+  fi
+
+  echo -e "${YELLOW}Installing NVIDIA packages: ${NVIDIA_PACKAGES[*]}${NC}"
+  sudo pacman -S --needed --noconfirm "${NVIDIA_PACKAGES[@]}" || true
+
+  if [[ $GPU_ARCH = "turing_plus" ]]; then
+    cat >>"$HOME/.config/uwsm/env" <<'EOF'
+
+# NVIDIA (Turing+ with GSP firmware) - auto-detected by installer
+export NVD_BACKEND=direct
+export LIBVA_DRIVER_NAME=nvidia
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+EOF
+  elif [[ $GPU_ARCH = "maxwell_pascal_volta" ]]; then
+    cat >>"$HOME/.config/uwsm/env" <<'EOF'
+
+# NVIDIA (Maxwell/Pascal/Volta) - auto-detected by installer
+export NVD_BACKEND=egl
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+EOF
+  fi
+
+  sudo mkinitcpio -P
+
+  echo -e "${GREEN}NVIDIA setup complete (arch: $GPU_ARCH)${NC}"
+}
+
+detect_and_install_vulkan() {
+  echo -e "${YELLOW}Detecting Vulkan-compatible GPUs...${NC}"
+
+  declare -A VULKAN_DRIVERS=(
+    [Intel]=vulkan-intel
+    [AMD]=vulkan-radeon
+    [Apple]=vulkan-asahi
+  )
+
+  VULKAN_PACKAGES=()
+  for vendor in "${!VULKAN_DRIVERS[@]}"; do
+    if lspci | grep -iE "(VGA|Display).*$vendor" > /dev/null 2>&1; then
+      echo -e "${GREEN}Detected $vendor GPU, adding ${VULKAN_DRIVERS[$vendor]}${NC}"
+      VULKAN_PACKAGES+=("${VULKAN_DRIVERS[$vendor]}")
+    fi
+  done # FIXED: Added closing done statement
+
+  if (( ${#VULKAN_PACKAGES[@]} > 0 )); then
+    sudo pacman -S --needed --noconfirm "${VULKAN_PACKAGES[@]}" || true
+    echo -e "${GREEN}Vulkan drivers installed${NC}"
+  else
+    echo -e "${YELLOW}No Vulkan-compatible GPU detected${NC}"
+  fi
+}
+
+detect_and_setup_multi_gpu() {
+  echo -e "${YELLOW}Detecting GPUs...${NC}"
+
+  INTEL_PCI=$(lspci -D | grep -iE "VGA.*Intel" | head -1 | cut -d' ' -f1 || true)
+  AMD_PCI=$(lspci -D -d ::0300 | grep -i "AMD" | head -1 | cut -d' ' -f1 || true)
+  NVIDIA_PCI=$(lspci -D | grep -iE "VGA.*NVIDIA" | head -1 | cut -d' ' -f1 || true)
+
+  GPU_SYMLINK=""
+  GPU_VENDOR=""
+  GPU_PCI=""
+
+  if [[ -n $INTEL_PCI ]]; then
+    GPU_VENDOR="Intel"
+    GPU_PCI="$INTEL_PCI"
+    GPU_SYMLINK="intel-gpu"
+    echo -e "${GREEN}Intel GPU detected at: $GPU_PCI${NC}"
+  elif [[ -n $AMD_PCI ]]; then
+    GPU_VENDOR="AMD"
+    GPU_PCI="$AMD_PCI"
+    GPU_SYMLINK="amd-gpu"
+    echo -e "${GREEN}AMD GPU detected at: $GPU_PCI${NC}"
+  elif [[ -n $NVIDIA_PCI ]]; then
+    GPU_VENDOR="NVIDIA"
+    GPU_PCI="$NVIDIA_PCI"
+    GPU_SYMLINK="nvidia-gpu"
+    echo -e "${GREEN}NVIDIA GPU detected at: $GPU_PCI${NC}"
+  else
+    echo -e "${YELLOW}No GPU detected, skipping GPU setup${NC}"
+    return 0
+  fi
+
+  UDEV_RULE_FILE="/etc/udev/rules.d/99-${GPU_SYMLINK}.rules"
+  sudo tee "$UDEV_RULE_FILE" <<EOF >/dev/null
+KERNEL=="card[0-9]*", KERNELS=="$GPU_PCI", SUBSYSTEM=="drm", SUBSYSTEMS=="pci", SYMLINK+="dri/$GPU_SYMLINK"
+EOF
+
+  echo -e "${GREEN}$GPU_VENDOR GPU udev rule created: /dev/dri/$GPU_SYMLINK -> $GPU_PCI${NC}"
+
+  sudo udevadm control --reload
+  sudo udevadm trigger
+
+  mkdir -p "$HOME/.config/uwsm"
+  cat >>"$HOME/.config/uwsm/env-hyprland" <<EOF
+
+# Primary GPU: $GPU_VENDOR (priority: Intel > AMD > NVIDIA)
+export AQ_DRM_DEVICES="/dev/dri/$GPU_SYMLINK"
+EOF
+
+  echo -e "${GREEN}GPU setup complete ($GPU_VENDOR selected as primary)${NC}"
+}
+
+# Install official packages
+echo -e "${YELLOW}Installing official packages...${NC}"
+# FIXED: Changed from packages.txt to repo-packages.txt to match your setup
+if [ -f "$DOTFILES_DIR/repo-packages.txt" ]; then
+  sudo pacman -Syu
+  sudo pacman -S --needed $(grep -v '^#' "$DOTFILES_DIR/repo-packages.txt" | grep -v '^$') || true
+else
+  echo -e "${RED}repo-packages.txt not found!${NC}"
+  exit 1
+fi
+
+# Install AUR packages
+echo -e "${YELLOW}Installing AUR packages...${NC}"
+if [ -f "$DOTFILES_DIR/aur-packages.txt" ]; then
+  $AUR_HELPER -Syu || true
+  $AUR_HELPER -S --needed $(grep -v '^#' "$DOTFILES_DIR/aur-packages.txt" | grep -v '^$') || true
+else
+  echo -e "${YELLOW}aur-packages.txt not found, skipping AUR packages${NC}"
+fi
+
+# ======================================
+#  Service & Hardware Setup
+# ======================================
+
+setup_bluetooth() {
+  echo -e "${YELLOW}Setting up Bluetooth...${NC}"
+  if command -v bluetoothctl &>/dev/null; then
+    sudo systemctl enable bluetooth.service
+    echo -e "${GREEN}Bluetooth enabled${NC}"
+  fi
+
+  if lsmod | grep -q rtl8723be || lspci | grep -qi "RTL8723"; then
+    echo -e "${YELLOW}RTL8723BE detected, applying Bluetooth fix...${NC}"
+    if [ -f "$DOTFILES_DIR/etc/modprobe.d/rtl8723be.conf" ]; then
+        sudo cp "$DOTFILES_DIR/etc/modprobe.d/rtl8723be.conf" /etc/modprobe.d/rtl8723be.conf
+    fi
+    sudo modprobe -r rtl8723be 2>/dev/null || true
+    sudo modprobe rtl8723be ant_sel=2 fwlps=0 ips=0 2>/dev/null || true
+    echo -e "${GREEN}RTL8723BE fix applied${NC}"
+  fi
+}
+
+setup_network() {
+  echo -e "${YELLOW}Setting up Network...${NC}"
+  sudo systemctl disable systemd-networkd-wait-online.service 2>/dev/null
+  sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+  echo -e "${GREEN}Network configured${NC}"
+}
+
+setup_printer() {
+  echo -e "${YELLOW}Setting up Printer support...${NC}"
+  if pacman -Qi cups &>/dev/null; then
+    sudo systemctl enable cups.service
+    echo -e "${GREEN}Printer support enabled${NC}"
+  fi
+}
+
+setup_firewall() {
+  echo -e "${YELLOW}Setting up Firewall...${NC}"
+  if command -v ufw &>/dev/null; then
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+    sudo ufw allow 53317/tcp
+    sudo ufw allow 53317/udp
+    sudo ufw --force enable
+    echo -e "${GREEN}Firewall enabled (deny incoming, allow outgoing, LocalSend allowed)${NC}"
+  else
+    echo -e "${YELLOW}ufw not installed, skipping firewall${NC}"
+  fi
+}
+
+setup_battery() {
+  echo -e "${YELLOW}Detecting battery...${NC}"
+  if ls /sys/class/power_supply/BAT* &>/dev/null; then
+    echo -e "${GREEN}Battery detected, applying ZZ TLP profile${NC}"
+
+    sudo mkdir -p /etc/tlp.d
+    sudo tee /etc/tlp.d/01-wifi.conf << 'EOF' >/dev/null
+WIFI_PWR_ON_AC=off
+WIFI_PWR_ON_BAT=off
+EOF
+    sudo tee /etc/tlp.d/02-cpu.conf << 'EOF' >/dev/null
+CPU_SCALING_GOVERNOR_ON_AC=schedutil
+CPU_SCALING_GOVERNOR_ON_BAT=schedutil
+CPU_ENERGY_PERF_POLICY_ON_AC=balance_performance
+CPU_ENERGY_PERF_POLICY_ON_BAT=power
+CPU_BOOST_ON_AC=1
+CPU_BOOST_ON_BAT=0
+EOF
+    sudo systemctl enable --now tlp || true
+  else
+    echo -e "${GREEN}No battery (desktop), setting performance profile${NC}"
+    command -v powerprofilesctl &>/dev/null && powerprofilesctl set performance || true
+  fi
+}
+
+echo -e "${YELLOW}Setting up services...${NC}"
+setup_bluetooth || true
+setup_network || true
+setup_printer || true
+setup_firewall || true
+setup_battery || true
+echo -e "${GREEN}Service setup complete${NC}"
+echo ""
+
+# Copy configuration files
+echo ""
+echo -e "${YELLOW}Copying configuration files...${NC}"
+
+backup_if_exists() {
+  if [ -e "$1" ] || [ -L "$1" ]; then
+    echo -e "${YELLOW}Backing up existing $1 to $1.backup${NC}"
+    rm -rf "$1.backup"
+    mv "$1" "$1.backup"
+  fi
+}
+
+# Copy .config directories and files
+if [ -d "$DOTFILES_DIR/.config" ]; then
+    for item in "$DOTFILES_DIR/.config"/*; do
+      basename_item=$(basename "$item")
+      target="$HOME/.config/$basename_item"
+      backup_if_exists "$target"
+
+      if [ -d "$item" ]; then
+        cp -r "$item" "$target"
+        echo -e "${GREEN}Copied:${NC} $basename_item"
+      elif [ -f "$item" ]; then
+        cp "$item" "$target"
+        echo -e "${GREEN}Copied:${NC} $basename_item"
+      fi
+    done # FIXED: Added closing done statement
+fi
+
+# Copy scripts
+echo ""
+echo -e "${YELLOW}Installing scripts to ~/.local/bin...${NC}"
+mkdir -p "$HOME/.local/bin"
+
+if [ -d "$DOTFILES_DIR/.local/bin" ]; then
+    for script in "$DOTFILES_DIR/.local/bin"/*.sh "$DOTFILES_DIR/.local/bin"/*.fish; do
+      # Prevent error if no scripts exist matching the wildcard
+      [ -e "$script" ] || continue
+      
+      if [ -f "$script" ]; then
+        target="$HOME/.local/bin/$(basename "$script")"
+        backup_if_exists "$target"
+        cp "$script" "$target"
+        chmod +x "$target"
+        echo -e "${GREEN}Copied:${NC} $(basename "$script")"
+      fi
+    done # FIXED: Added closing done statement
+fi
+
+# ZZ: Copy .bashrc
+if [ -f "$DOTFILES_DIR/.bashrc" ]; then
+  backup_if_exists "$HOME/.bashrc"
+  cp "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
+  echo -e "${GREEN}Copied:${NC} .bashrc"
+fi
+
+# Copy .local/share assets
+if [ -d "$DOTFILES_DIR/.local/share" ]; then
+  echo ""
+  echo -e "${YELLOW}Copying .local/share assets...${NC}"
+  mkdir -p "$HOME/.local/share"
+  for item in "$DOTFILES_DIR/.local/share"/*; do
+    if [ -e "$item" ]; then
+      basename_item=$(basename "$item")
+      target="$HOME/.local/share/$basename_item"
+      backup_if_exists "$target"
+      cp -r "$item" "$target"
+      echo -e "${GREEN}Copied:${NC} .local/share/$basename_item"
+    fi
+  done
+fi # FIXED: Added closing fi statement
+
+# ======================================
+#  Hardware Auto-Detection
+# ======================================
+echo ""
+echo -e "${YELLOW}Running hardware detection...${NC}"
+
+detect_and_install_nvidia || true
+detect_and_install_vulkan || true
+detect_and_setup_multi_gpu || true
+
+sudo pacman -S --needed --noconfirm intel-media-driver
+mkdir -p /etc/environment.d
+echo 'LIBVA_DRIVER_NAME=iHD' | sudo tee /etc/environment.d/intel-media.conf
+
+echo -e "${GREEN}Hardware detection complete${NC}"
+echo ""
+
+# Enable and start services
+echo ""
+echo -e "${YELLOW}Enabling system services...${NC}"
+systemctl --user enable --now pipewire pipewire-pulse wireplumber || true
+
+if [ -f "$HOME/.config/systemd/user/battery-monitor.timer" ]; then
+  echo -e "${YELLOW}Enabling battery monitor timer...${NC}"
+  systemctl --user daemon-reload
+  systemctl --user enable --now battery-monitor.timer
+  echo -e "${GREEN}Battery monitor enabled${NC}"
+fi
+
+# Initialize Theme Manager
+DEFAULT_THEME="deep-sea"
+echo ""
+echo -e "${YELLOW}Initializing Theme Manager (Default: ${DEFAULT_THEME})...${NC}"
+THEME_DIR="$HOME/.config/hypr/themes/$DEFAULT_THEME"
+CACHE_DIR="$HOME/.cache"
+mkdir -p "$CACHE_DIR"
+mkdir -p "$HOME/.config/btop/themes"
+mkdir -p "$HOME/.config/rofi"
+
+if [ -d "$THEME_DIR/rofi/launcher" ]; then
+    ln -sfn "$THEME_DIR/rofi/launcher" "$HOME/.config/rofi/launcher"
+fi
+if [ -d "$THEME_DIR/rofi/powermenu" ]; then
+    ln -sfn "$THEME_DIR/rofi/powermenu" "$HOME/.config/rofi/powermenu"
+fi
+
+touch "$CACHE_DIR/live_wallpaper_enabled"
+
+if [ -f "$HOME/.local/bin/theme-switcher.sh" ]; then
+    THEME_SWITCHER_NO_RELOAD=1 bash "$HOME/.local/bin/theme-switcher.sh" "$DEFAULT_THEME" || true
+fi
+
+if [[ -f "$THEME_DIR/cursor-theme" ]]; then
+  CURSOR="$(cat "$THEME_DIR/cursor-theme")"
+  echo "export XCURSOR_THEME=$CURSOR" >> "$HOME/.config/uwsm/env"
+fi
+echo -e "${GREEN}Theme initialized${NC}"
+
+mkdir -p ~/Videos
+mkdir -p ~/Pictures
+
+echo -e "${YELLOW}Configuring shell integration...${NC}"
+if [ -f "$HOME/.local/bin/terminal.sh" ]; then
+    bash "$HOME/.local/bin/terminal.sh" || true
+fi
+
+echo ""
+echo -e "${GREEN}======================================"
+echo "  Installation Complete!"
+echo "======================================${NC}"
+echo ""
+echo "Configuration files have been copied to your home directory."
+echo "To update configs, edit files in ~/.config/ directly."
+echo ""
+echo "Next steps:"
+echo "1. Reboot your computer or log into Hyprland."
+echo "2. Customize ~/.config/hypr/monitors.conf for your setup"
+echo "3. Done"
+echo ""
+
+read -p "Reboot now to take effect? (y/n) " logout
+if [ "$logout" == "y" ]; then
+    echo "Rebooting..."
+    sudo reboot
+else
+    echo "Exiting..."
+    exit
+fi  cd /tmp/yay
+  makepkg -si --noconfirm
+  cd "$DOTFILES_DIR"
+  AUR_HELPER="yay"
+fi
+
+echo -e "${GREEN}Using AUR helper: $AUR_HELPER${NC}"
+echo ""
+
+# ======================================
+#  Hardware Detection Functions
+# ======================================
+
+detect_and_install_nvidia() {
+  echo -e "${YELLOW}Detecting NVIDIA GPU...${NC}"
+  NVIDIA="$(lspci | grep -i 'nvidia' || true)"
+
+  if [[ -z $NVIDIA ]]; then
+    echo -e "${GREEN}No NVIDIA GPU detected, skipping${NC}"
+    return 0
+  fi
+
+  echo -e "${GREEN}NVIDIA GPU detected: $NVIDIA${NC}"
+
   # Derive the kernel package base from the running kernel's modules dir
   # (works for stock Arch and custom kernels like linux-cachyos-lts).
   KERNEL_BASE="$(cat "/usr/lib/modules/$(uname -r)/pkgbase" 2>/dev/null || true)"
