@@ -1,133 +1,141 @@
 {
-    "layer": "top", // Waybar at top layer
-    "position": "top", // Waybar position (top|bottom|left|right)
-    // clock module (incl. themed calendar colors) is generated per-theme; see theme-clock.jsonc
-    "include": ["~/.config/waybar/theme-clock.jsonc"],
-    // "width": 1280, // Waybar width
-    // Choose the order of the modules
-    "modules-left": ["hyprland/workspaces", "custom/muslimtify"],
-    "modules-center": ["hyprland/window"],
-    "modules-right": ["cpu", "memory", "network", "bluetooth", "pulseaudio","pulseaudio#microphone", "backlight", "battery", "clock", "tray", "custom/lock", "custom/power"],
-    "hyprland/workspaces": {
-         "disable-scroll": true,
-         "sort-by-name": true,
-         "format": " {icon} ",
-         "format-icons": {
-              "default": "",
-              "1": "1",
-              "2": "2",
-              "3": "3",
-              "4": "4",
-              "5": "5",
-              "6": "6",
-              "7": "7",
-              "8": "8",
-              "9": "9",
-              "10": "0",
-              "active": ""
-         },
-     },
-    "hyprland/window": {
-        "format": "󰣇 {}",
-    },
-    "tray": {
-        "icon-size": 21,
-        "spacing": 10
-    },
-    "cpu": {
-        "interval": 10,
-        "format": "󰍛 {usage}%",
-        "format-alt": "{icon0}{icon1}{icon2}{icon3}",
-        "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
-    },
-    "memory": {
-        "states": {
-            "c": 90, // critical
-            "h": 60, // high
-            "m": 30 // medium
-        },
-        "interval": 10,
-        "format": "󰾆 {used}GB",
-        "format-m": "󰾅 {used}GB",
-        "format-h": "󰓅 {used}GB",
-        "format-c": " {used}GB",
-        "format-alt": "󰾆 {percentage}%",
-        "max-length": 10,
-        "tooltip": true,
-        "tooltip-format": "󰾆 {percentage}%\n {used:0.1f}GB/{total:0.1f}GB"
-    },
-    "backlight": {
-        "device": "intel_backlight",
-        "format": "{icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", ""]
-    },
-    "battery": {
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 20
-        },
-        "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
-        "format-icons": ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
-    },
-    "bluetooth": {
-        "format": " on",
-        "format-off": "󰂲 off",
-        "format-disabled": "󰂲 off",
-        "format-connected": "󰂱 connected",
-        "format-no-controller": "",
-        "tooltip-format": "Devices connected: {num_connections}",
-        "on-click": "~/.local/bin/bluetooth-toggle.sh toggle"
-    },
-    "network": {
-        "tooltip": true,
-        "format-wifi": "  {essid}",
-        "format-ethernet": "󰈀 eth",
-        "tooltip-format": "Network: <big><b>{essid}</b></big>\nSignal strength: <b>{signaldBm}dBm ({signalStrength}%)</b>\nFrequency: <b>{frequency}MHz</b>\nInterface: <b>{ifname}</b>\nIP: <b>{ipaddr}/{cidr}</b>\nGateway: <b>{gwaddr}</b>\nNetmask: <b>{netmask}</b>",
-        "format-linked": "󰈀 {ifname} (No IP)",
-        "format-disconnected": "󰖪 no connection",
-        "tooltip-format-disconnected": "Disconnected",
-        "format-alt": "<span foreground='#99ffdd'> {bandwidthDownBytes}</span> <span foreground='#ffcc66'> {bandwidthUpBytes}</span>",
-        "interval": 2
-    },
-    "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{icon} {volume}%",
-        "format-muted": "",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
-        "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-",
-        "scroll-step": 5,
-        "format-icons": {
-            "default": ["", "", " "]
-        }
-    },
-    "pulseaudio#microphone": {
-        "format": "{format_source}",
-        "format-source": " {volume}%",
-        "format-source-muted": "  Muted",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
-        "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SOURCE@ 5%+",
-        "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SOURCE@ 5%-",
-        "scroll-step": 5
-    },
-    "custom/lock": {
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "margin-top": 6,
+    "margin-left": 16,
+    "margin-right": 16,
+    "spacing": 0,
+    "modules-left": [
+        "custom/zz",
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-center": [
+        "custom/muslimtify",
+        "clock"
+    ],
+    "modules-right": [
+        "cpu",
+        "memory",
+        "network",
+        "bluetooth",
+        "pulseaudio",
+        "backlight",
+        "battery",
+        "tray",
+        "custom/lock",
+        "custom/power"
+    ],
+    "custom/zz": {
+        "format": "Zz",
         "tooltip": false,
-        "on-click": "hyprlock",
-        "format": "",
+        "on-click": "rofi -show drun"
     },
     "custom/muslimtify": {
         "exec": "~/.local/bin/waybar-muslimtify.sh",
         "return-type": "json",
         "interval": 30,
+        "format": "󱠧  {}",
         "tooltip": true
     },
-    "custom/power": {
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "sort-by-name": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1", "2": "2", "3": "3", "4": "4", "5": "5",
+            "6": "6", "7": "7", "8": "8", "9": "9",
+            "active": "",
+            "default": "·"
+        },
+        "on-click": "activate"
+    },
+    "hyprland/window": {
+        "format": "  {}",
+        "max-length": 40,
+        "separate-outputs": true
+    },
+    "clock": {
+        "format": "󰥔  {:%b %d  %I:%M %p}",
+        "format-alt": "󰥔  {:%A, %B %d}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "left"
+        }
+    },
+    "cpu": {
+        "interval": 5,
+        "format": "󰍛  {usage}%",
+        "tooltip": true,
+        "on-click-right": "ghostty -e btop"
+    },
+    "memory": {
+        "interval": 10,
+        "format": "󰘚  {used:.1f}G",
+        "tooltip": true,
+        "on-click-right": "ghostty -e btop"
+    },
+    "network": {
+        "interval": 2,
+        "format-wifi": "󰤨  {essid}",
+        "format-ethernet": "󰈀  Connected",
+        "format-disconnected": "󰤭  Offline",
+        "tooltip-format": "IP: {ipaddr}/{cidr}\nSignal: {signalStrength}%",
+        "on-click": "nm-connection-editor"
+    },
+    "bluetooth": {
+        "format": "󰂯",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱  {num_connections}",
+        "tooltip-format": "Bluetooth\nDevices: {num_connections}",
+        "on-click": "~/.local/bin/bluetooth-toggle.sh toggle",
+        "on-click-right": "blueman-manager"
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "󰝟  muted",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-"
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon}  {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+    "battery": {
+        "states": {
+            "good": 80,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "󰂄  {capacity}%",
+        "format-plugged": "󰂄  {capacity}%",
+        "format-alt": "{time}  {icon}",
+        "format-icons": ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+    "custom/lock": {
+        "format": "󰌾",
         "tooltip": false,
-        "on-click": "~/.config/rofi/powermenu/powermenu.sh",
-        "format": "⏻"
+        "on-click": "hyprlock"
+    },
+    "custom/power": {
+        "format": "⏻",
+        "tooltip": false,
+        "on-click": "~/.config/rofi/powermenu/powermenu.sh"
     }
 }
