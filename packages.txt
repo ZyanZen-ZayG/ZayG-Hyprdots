@@ -12,7 +12,7 @@ xdg-desktop-portal-hyprland
 # UI/Menu/Status
 waybar
 dunst
-rofi
+rofi-wayland
 nwg-look
 gnome-themes-extra
 
