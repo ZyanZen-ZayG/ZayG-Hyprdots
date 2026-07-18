@@ -9,3 +9,4 @@ hyprshutdown
 hyprqt6engine
 brave-bin
 noise-suppression-for-voice
+zen-browser-bin
