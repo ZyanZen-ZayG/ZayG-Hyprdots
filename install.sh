@@ -265,8 +265,22 @@ setup_firewall() {
 setup_battery() {
   echo -e "${YELLOW}Detecting battery...${NC}"
   if ls /sys/class/power_supply/BAT* &>/dev/null; then
-    echo -e "${GREEN}Battery detected, setting balanced power profile${NC}"
-    command -v powerprofilesctl &>/dev/null && powerprofilesctl set balanced
+    echo -e "${GREEN}Battery detected, applying ZZ TLP profile${NC}"
+
+    sudo mkdir -p /etc/tlp.d
+    sudo tee /etc/tlp.d/01-wifi.conf << 'EOF'
+WIFI_PWR_ON_AC=off
+WIFI_PWR_ON_BAT=off
+EOF
+    sudo tee /etc/tlp.d/02-cpu.conf << 'EOF'
+CPU_SCALING_GOVERNOR_ON_AC=schedutil
+CPU_SCALING_GOVERNOR_ON_BAT=schedutil
+CPU_ENERGY_PERF_POLICY_ON_AC=balance_performance
+CPU_ENERGY_PERF_POLICY_ON_BAT=power
+CPU_BOOST_ON_AC=1
+CPU_BOOST_ON_BAT=0
+EOF
+    sudo systemctl enable --now tlp
   else
     echo -e "${GREEN}No battery (desktop), setting performance profile${NC}"
     command -v powerprofilesctl &>/dev/null && powerprofilesctl set performance
@@ -327,6 +341,14 @@ for script in "$DOTFILES_DIR/.local/bin"/*.sh "$DOTFILES_DIR/.local/bin"/*.fish;
   fi
 done
 
+# ZZ: Copy .bashrc
+if [ -f "$DOTFILES_DIR/.bashrc" ]; then
+  backup_if_exists "$HOME/.bashrc"
+  cp "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
+  echo -e "${GREEN}Copied:${NC} .bashrc"
+fi
+done
+
 # Copy .local/share assets
 if [ -d "$DOTFILES_DIR/.local/share" ]; then
   echo ""
@@ -354,6 +376,11 @@ echo -e "${YELLOW}Running hardware detection...${NC}"
 detect_and_install_nvidia || true
 detect_and_install_vulkan || true
 detect_and_setup_multi_gpu || true
+
+# ZZ: Intel iHD media driver (Skylake HD 520)
+sudo pacman -S --needed --noconfirm intel-media-driver
+mkdir -p /etc/environment.d
+echo 'LIBVA_DRIVER_NAME=iHD' | sudo tee /etc/environment.d/intel-media.conf
 
 echo -e "${GREEN}Hardware detection complete${NC}"
 echo ""

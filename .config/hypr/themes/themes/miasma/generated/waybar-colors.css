@@ -1,0 +1,12 @@
+@define-color fg #c2c2b0;
+@define-color bg-widget #000000;
+@define-color bg-deep #222222;
+@define-color accent #78824b;
+@define-color accent-bright #c9a554;
+@define-color accent-dim #78824b;
+@define-color secondary #bb7744;
+@define-color success #5f875f;
+@define-color warning #b36d43;
+@define-color danger #685742;
+@define-color info #c9a554;
+@define-color muted #685742;

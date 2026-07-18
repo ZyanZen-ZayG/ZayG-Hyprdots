@@ -1,0 +1,44 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+"logo": {
+    "type": "auto",
+    "padding": {
+      "right": 4
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "key": {
+      "width": 14
+    }
+  },
+  "modules": [
+    "break",
+    {
+      "type": "os",
+      "key": ":DISTRO    ",
+      "keyColor": "38;5;141",
+      "format": "Kyzenix Linux x86_64"
+    },
+    {
+      "type": "kernel",
+      "key": ":::KERNEL  ",
+      "keyColor": "38;5;141"
+    },
+    {
+      "type": "packages",
+      "key": ":::PACKAGES",
+      "keyColor": "38;5;141"
+    },
+    {
+      "type": "shell",
+      "key": ":::SHELL   ",
+      "keyColor": "38;5;141"
+    },
+    {
+      "type": "uptime",
+      "key": ":::UPTIME  ",
+      "keyColor": "38;5;141"
+    }
+  ]
+}

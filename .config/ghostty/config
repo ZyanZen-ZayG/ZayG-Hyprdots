@@ -2,31 +2,8 @@
 
 font-family = JetBrainsMono Nerd Font Mono
 background-opacity = 0.8
-theme = Catppuccin Mocha
 bold-is-bright = true
-background = #1e1e2e
-foreground = #cdd6f4
-selection-background = #585b70
-selection-foreground = #cdd6f4
-cursor-color = #f5e0dc
-cursor-text = #1e1e2e
 cursor-style = underline
-palette = 0=#45475a
-palette = 1=#f38ba8
-palette = 2=#a6e3a1
-palette = 3=#f9e2af
-palette = 4=#89b4fa
-palette = 5=#f5c2e7
-palette = 6=#94e2d5
-palette = 7=#a6adc8
-palette = 8=#585b70
-palette = 9=#f37799
-palette = 10=#89d88b
-palette = 11=#ebd391
-palette = 12=#74a8fc
-palette = 13=#f2aede
-palette = 14=#6bd7ca
-palette = 15=#bac2de
 font-size = 12
 
 # Splits
@@ -46,3 +23,29 @@ keybind = ctrl+shift+alt+l=resize_split:right,20
 keybind = ctrl+shift+t=new_tab
 keybind = ctrl+shift+n=next_tab
 keybind = ctrl+shift+p=previous_tab
+
+
+
+
+background = #010a1a
+foreground = #F9F8FE
+cursor-color = #ffffff
+selection-background = #ffb703
+selection-foreground = #010a1a
+
+palette = 0=#051f42
+palette = 1=#ff5d5d
+palette = 2=#1F7DD3
+palette = 3=#ffcc00
+palette = 4=#1e6091
+palette = 5=#9d4edd
+palette = 6=#1E4BC3
+palette = 7=#1A76C9
+palette = 8=#184e77
+palette = 9=#ff5d5d
+palette = 10=#0F50A5
+palette = 11=#ffb703
+palette = 12=#1a759f
+palette = 13=#5E6FDD
+palette = 14=#2A93DD
+palette = 15=#ffffff
