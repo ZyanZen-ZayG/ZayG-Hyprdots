@@ -1,6 +1,6 @@
-# hyprsimple
+# ZayG-Hyprdots
 
-Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
+Minimalist Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 
 > [!Note]
 > This dotfile have builtin [muslimtify](https://github.com/rizukirr/muslimtify). A prayer time notification daemon for Linux. Run `muslimtify-remove` to uninstall it (package, daemon, waybar module, and CSS). Run `muslimtify-add` to re-enable it later. Both commands are idempotent and back up your waybar config to `.bak` before editing.
@@ -36,46 +36,44 @@ Minimal Hyprland dotfiles for Arch Linux. Clean, functional, no bloat.
 ## Install
 
 ```bash
-git clone https://github.com/rizukirr/hyprsimple.git
-cd hyprsimple
+git clone --depth=1 https://github.com/ZyanZen-ZayG/ZayG-Hyprdots.git ~/ZayG-hyprdots
+cd ~/ZayG-hyprdots
 ./install.sh
 ```
 
 > [!WARNING]
-> These dotfiles have only been tested on a fresh Arch Linux install where Hyprland was selected
+> These dotfiles have only been tested on a fresh Arch Linux install where Hyprland and Minimal was selected
 > as the desktop during installation. Coming from another desktop environment or compositor
 > (KDE, GNOME, etc.) is untested and may require manual cleanup.
 
-If you run into a problem installing hyprsimple, please [open an issue](https://github.com/rizukirr/hyprsimple/issues) — thank you!
+If you run into any issues with this setup, feel free to [open an issue](https://github.com/ZyanZen-ZayG/ZayG-Hyprdots/issues) and I'll take a look!
 
 ## Network
 
 To see the available network interfaces, run `wifi`. To connect to a network, run `wifi <network name>` for example `wifi "MY NETWORK"`
 
 ## Keybindings
-
 Press **`SUPER + /`** for interactive viewer with fuzzy search.
 
 ### Applications
-
 | Key | Action |
 |-----|--------|
-| `SUPER + T` | Open terminal (Ghostty) |
-| `SUPER + B` | Open browser (Brave) |
+| `SUPER + Return` | Open terminal (Ghostty) |
+| `SUPER + B` | Open browser (Zen Browser) |
 | `SUPER + A` | App launcher (Rofi) |
 | `SUPER + F` | File manager (Nautilus) |
 | `SUPER + O` | Notes (Obsidian) |
-| `SUPER + S` | Android Studio |
 | `SUPER + E` | Emoji picker |
 | `SUPER + V` | Clipboard history |
-| `SUPER + M` | Color picker |
+| `SUPER + C` | Color picker |
+| `SUPER + ALT + W` | Waydroid |
 
 ### Window Management
-
 | Key | Action |
 |-----|--------|
 | `SUPER + Q` | Kill active window |
 | `SUPER + W` | Toggle floating |
+| `SUPER + SHIFT + F` | Toggle fullscreen |
 | `SUPER + SHIFT + J` | Toggle split (dwindle) |
 | `SUPER + H / J / K / L` | Move focus left / down / up / right |
 | `SUPER + SHIFT + Arrow` | Resize window |
@@ -83,7 +81,6 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + RMB drag` | Resize window |
 
 ### Workspaces
-
 | Key | Action |
 |-----|--------|
 | `SUPER + [1-9, 0]` | Switch to workspace 1-10 |
@@ -92,15 +89,13 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + Scroll` | Cycle through workspaces |
 
 ### Theming & Wallpaper
-
 | Key | Action |
 |-----|--------|
 | `SUPER + SHIFT + T` | Switch theme |
 | `SUPER + SHIFT + W` | Pick wallpaper from current theme |
-| `SUPER + ALT + W` | Cycle to next wallpaper |
+| `SUPER + CTRL + W` | Toggle live wallpaper |
 
 ### Screenshot
-
 | Key | Action |
 |-----|--------|
 | `Print` | Screenshot current monitor |
@@ -109,7 +104,6 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + CTRL + Print` | Screenshot region to clipboard |
 
 ### Screen Recording
-
 | Key | Action |
 |-----|--------|
 | `SUPER + R` | Record region with mic audio |
@@ -120,7 +114,6 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + CTRL + SHIFT + R` | Record fullscreen without audio |
 
 ### Media & Brightness
-
 | Key | Action |
 |-----|--------|
 | `Volume Up / Down` | Adjust volume |
@@ -129,10 +122,8 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `Play / Pause` | Media play/pause |
 | `Next / Prev` | Media next/previous track |
 | `Brightness Up / Down` | Adjust screen brightness |
-| `Kbd Brightness Up / Down` | Adjust keyboard backlight |
 
 ### System
-
 | Key | Action |
 |-----|--------|
 | `SUPER + ESC` | Power menu |
@@ -144,7 +135,6 @@ Press **`SUPER + /`** for interactive viewer with fuzzy search.
 | `SUPER + SHIFT + I` | Toggle idle lock |
 | `SUPER + F10` | Switch audio output |
 | `SUPER + SHIFT + M` | Toggle monitor mirroring |
-| `SUPER + CTRL + V` | Toggle virtual mirror |
 | `SUPER + /` | Show all keybindings |
 
 ## Scripts
