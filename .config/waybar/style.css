@@ -1,7 +1,4 @@
-/* ═══════════════════════════════════════════════════════════
-   Zz Waybar — Clean, Refined, Lightweight
-   ═══════════════════════════════════════════════════════════ */
-
+/* Base Settings */
 * {
     font-family: "JetBrainsMono Nerd Font", "Noto Sans", monospace;
     font-size: 13px;
@@ -18,54 +15,32 @@ window#waybar {
     color: #e0e0e8;
 }
 
-/* ── Floating Corner Sections ── */
-.modules-left {
-    background: rgba(10, 10, 14, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 10px 24px 24px 10px;
-    padding: 0 12px 0 4px;
-    margin-right: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+/* Floating Corner Sections */
+.modules-left, .modules-right {
+    background: rgba(18, 18, 25, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 24px; 
+    padding: 4px 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
+
+.modules-left { margin-right: 12px; }
+.modules-right { margin-left: 12px; }
 
 .modules-center {
     background: transparent;
     border: none;
 }
 
-.modules-right {
-    background: rgba(10, 10, 14, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 24px 10px 10px 24px;
-    padding: 0 12px;
-    margin-left: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+/* Shared Module Padding */
+#window, #cpu, #memory, #network, #bluetooth, #pulseaudio, #backlight, #battery, #tray, #custom-lock, #custom-power {
+    padding: 0 8px;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* ── Shared Module Padding ── */
-#workspaces,
-#window,
-#cpu,
-#memory,
-#network,
-#bluetooth,
-#pulseaudio,
-#backlight,
-#battery,
-#tray,
-#custom-lock,
-#custom-power {
-    padding: 0 10px;
-    transition: all 0.2s ease;
-}
-
-/* ═══════════════════════════════════════════════════
-   Zz Logo — Sharp Geometric Style
-   ═══════════════════════════════════════════════════ */
+/* Zz Logo - Kept intact as requested */
 #custom-zz {
-    font-family: "JetBrainsMono Nerd Font", "Black Ops One", sans-serif;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
     font-style: italic;
     font-weight: 900;
     font-size: 17px;
@@ -73,178 +48,114 @@ window#waybar {
     color: #00e5cc;
     background: transparent;
     padding: 0 14px 0 6px;
-    text-shadow: 0 0 6px rgba(0, 229, 204, 0.4),
-                 0 0 16px rgba(0, 229, 204, 0.15),
-                 1px 1px 0 rgba(0, 229, 204, 0.2);
-    transition: all 0.25s ease;
-    border-right: 1px solid rgba(0, 229, 204, 0.15);
+    text-shadow: 0 0 8px rgba(0, 229, 204, 0.35), 0 0 20px rgba(0, 229, 204, 0.12);
+    transition: all 0.2s ease;
+    border-right: 1px solid rgba(0, 229, 204, 0.12);
     margin-right: 2px;
 }
 
 #custom-zz:hover {
     color: #ffffff;
-    text-shadow: 0 0 8px rgba(0, 229, 204, 0.7),
-                 0 0 20px rgba(0, 229, 204, 0.35),
-                 0 0 40px rgba(0, 229, 204, 0.15);
+    text-shadow: 0 0 10px rgba(0, 229, 204, 0.8), 0 0 24px rgba(0, 229, 204, 0.4);
 }
 
-/* ═══════════════════════════════════════════════════
-   Center Modules — Muslimtify & Clock (Pill Style)
-   ═══════════════════════════════════════════════════ */
+/* Center Modules */
 #clock, #custom-muslimtify {
-    background: rgba(10, 10, 14, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 20px;
-    padding: 0 16px;
-    margin: 0 4px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    background: rgba(18, 18, 25, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 24px;
+    padding: 4px 16px;
+    margin: 0 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-#clock {
-    color: #cba6f7;
-    font-weight: 700;
-    border-color: rgba(203, 166, 247, 0.15);
-}
+#clock { color: #cba6f7; font-weight: 700; }
+#custom-muslimtify { color: #a6e3a1; font-weight: 600; font-size: 13px; }
 
-#custom-muslimtify {
-    color: #a6e3a1;
-    font-weight: 700;
-    border-color: rgba(166, 227, 161, 0.15);
-}
-
-#clock:hover {
-    background: rgba(203, 166, 247, 0.08);
-    border-color: rgba(203, 166, 247, 0.3);
-    text-shadow: 0 0 6px rgba(203, 166, 247, 0.3);
-}
-
-#custom-muslimtify:hover {
-    background: rgba(166, 227, 161, 0.08);
-    border-color: rgba(166, 227, 161, 0.3);
-    text-shadow: 0 0 6px rgba(166, 227, 161, 0.3);
-}
 
 /* ═══════════════════════════════════════════════════
-   Workspaces — Clean Pill Buttons
-   ═══════════════════════════════════════════════════ */
-#workspaces {
-    margin: 0 4px;
-    padding: 0 4px;
+              ZayG-WorkSpace-CSS
+═══════════════════════════════════════════════════ */
+#workspaces { 
+    margin: 0 6px; 
+    padding: 0;
 }
 
 #workspaces button {
-    font-size: 12px;
-    color: #505060;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-weight: 900;
+    font-size: 13px;
+    color: #a6adc8; /* Inactive color */
     background: transparent;
-    padding: 0 7px;
-    min-width: 0;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    padding: 2px 14px;
+    margin: 0 4px;
+    
+    /* The "Italian/Z" Look: Asymmetrical radius makes it look fast/angled */
+    border-radius: 10px 0px 10px 0px; 
+    
+    border: 1px solid rgba(0, 229, 204, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 #workspaces button:hover {
-    color: #e0e0e8;
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(0, 229, 204, 0.1);
+    color: #00e5cc;
+    border: 1px solid rgba(0, 229, 204, 0.5);
 }
 
 #workspaces button.active {
-    color: #00e5cc;
-    background: rgba(0, 229, 204, 0.4);
-    text-shadow: 0 0 6px rgba(0, 229, 204, 0.25);
+    background: #00a896; /* Softer, dimmer cyan */
+    color: #11111b;      /* Dark text for high contrast */
+    border: 1px solid #00a896;
+    box-shadow: 0 0 8px rgba(0, 168, 150, 0.3); /* Softer, reduced glow */
 }
 
 #workspaces button.urgent {
-    color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.4);
-    text-shadow: 0 0 6px rgba(255, 107, 107, 0.25);
+    background: #f38ba8;
+    color: #11111b;
 }
 
-/* ── Window Title ── */
-#window {
-    color: #9399b2;
-    font-size: 12px;
-    font-weight: 400;
-    padding: 0 8px;
-}
 
-/* ═══════════════════════════════════════════════════
-   Right-Side Module Colors (Subtle Glow on Hover)
-   ═══════════════════════════════════════════════════ */
+/* Window Title */
+#window { color: #a6adc8; font-size: 13px; font-weight: 500; padding: 0 12px; }
+
+/* Right-Side Modules */
 #cpu { color: #89b4fa; }
-#cpu:hover { text-shadow: 0 0 6px rgba(137, 180, 250, 0.3); }
-#cpu.high { color: #ffaa55; }
-
 #memory { color: #f5c2e7; }
-#memory:hover { text-shadow: 0 0 6px rgba(245, 194, 231, 0.3); }
-#memory.warning { color: #ffaa55; }
-#memory.critical { color: #ff6b6b; }
-
-#network { color: #f9e2af; }
-#network:hover { text-shadow: 0 0 6px rgba(249, 226, 175, 0.3); }
+#network { color: #f9e2af; font-size: 15px; }
 #network.disconnected { color: #505060; }
-
-#bluetooth { color: #74c7ec; }
-#bluetooth:hover { text-shadow: 0 0 6px rgba(116, 199, 236, 0.3); }
-#bluetooth.connected { color: #00b4d8; }
-
+#bluetooth { color: #74c7ec; font-size: 14px; }
 #pulseaudio { color: #f38ba8; }
-#pulseaudio:hover { text-shadow: 0 0 6px rgba(243, 139, 168, 0.3); }
 #pulseaudio.muted { color: #505060; }
-
 #backlight { color: #f9e2af; }
-#backlight:hover { text-shadow: 0 0 6px rgba(249, 226, 175, 0.3); }
 
+/* Battery */
 #battery { color: #94e2d5; }
-#battery:hover { text-shadow: 0 0 6px rgba(148, 226, 213, 0.3); }
-#battery.warning { color: #ffaa55; }
-#battery.critical { color: #ff6b6b; }
+#battery.warning { color: #fab387; }
+#battery.critical { color: #f38ba8; } 
 #battery.charging, #battery.plugged { color: #a6e3a1; }
 
-/* ═══════════════════════════════════════════════════
-   System Actions — Lock & Power
-   ═══════════════════════════════════════════════════ */
-#tray { padding: 0 8px; }
-
-#custom-lock {
-    font-size: 14px;
-    color: #a6adc8;
-    padding: 0 8px;
-}
-#custom-lock:hover {
-    color: #89b4fa;
-    text-shadow: 0 0 8px rgba(137, 180, 250, 0.5);
+/* Right side hover effects */
+#cpu:hover, #memory:hover, #network:hover, #bluetooth:hover, #pulseaudio:hover, #backlight:hover, #battery:hover {
+    text-shadow: 0 0 8px currentColor;
 }
 
-#custom-power {
-    font-size: 14px;
-    color: #a6adc8;
-    padding: 0 8px 0 4px;
-}
-#custom-power:hover {
-    color: #f38ba8;
-    text-shadow: 0 0 8px rgba(243, 139, 168, 0.5);
-}
+/* Tray, Lock, Power */
+#tray { padding: 0 10px; margin-left: 4px; border-left: 1px solid rgba(255, 255, 255, 0.08); }
+#custom-lock { font-size: 15px; color: #a6adc8; padding: 0 10px; }
+#custom-lock:hover { color: #89b4fa; text-shadow: 0 0 10px rgba(137, 180, 250, 0.6); }
+#custom-power { font-size: 15px; color: #f38ba8; padding: 0 8px 0 4px; }
+#custom-power:hover { color: #e61919; text-shadow: 0 0 10px rgba(230, 25, 25, 0.6); }
 
-/* ── Module Dividers ── */
-#cpu, #memory, #network, #bluetooth, #pulseaudio, #backlight {
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* ═══════════════════════════════════════════════════
-   Tooltips — Frosted Glass
-   ═══════════════════════════════════════════════════ */
+/* Tooltips */
 tooltip {
-    background: rgba(10, 10, 14, 0.92);
-    border: 1px solid rgba(0, 229, 204, 0.15);
-    border-radius: 10px;
-    color: #e0e0e8;
-    font-size: 12px;
-    padding: 6px 2px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    background: rgba(18, 18, 25, 0.95);
+    border: 1px solid rgba(230, 25, 25, 0.3); /* Kyzen Red border */
+    border-radius: 12px;
+    color: #cdd6f4;
+    font-size: 13px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
-
-tooltip label {
-    padding: 2px 10px;
-}
+tooltip label { padding: 2px 12px; }

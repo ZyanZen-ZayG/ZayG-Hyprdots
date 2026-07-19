@@ -6,6 +6,7 @@
     "margin-left": 16,
     "margin-right": 16,
     "spacing": 0,
+
     "modules-left": [
         "custom/zz",
         "hyprland/workspaces",
@@ -27,35 +28,34 @@
         "custom/lock",
         "custom/power"
     ],
+
     "custom/zz": {
         "format": "Zz",
         "tooltip": false,
         "on-click": "rofi -show drun"
     },
+
     "custom/muslimtify": {
         "exec": "~/.local/bin/waybar-muslimtify.sh",
         "return-type": "json",
         "interval": 30,
-        "format": "󱠧  {}",
+        "format": "{}",
         "tooltip": true
     },
-    "hyprland/workspaces": {
-        "disable-scroll": true,
-        "sort-by-name": true,
-        "format": "{icon}",
-        "format-icons": {
-            "1": "1", "2": "2", "3": "3", "4": "4", "5": "5",
-            "6": "6", "7": "7", "8": "8", "9": "9",
-            "active": "",
-            "default": "·"
-        },
-        "on-click": "activate"
+
+"hyprland/workspaces": {
+        "format": "{name}",
+        "on-click": "activate",
+        "all-outputs": true
+        // Persistent-workspaces removed to only show active ones
     },
+
     "hyprland/window": {
         "format": "  {}",
         "max-length": 40,
         "separate-outputs": true
     },
+
     "clock": {
         "format": "󰥔  {:%b %d  %I:%M %p}",
         "format-alt": "󰥔  {:%A, %B %d}",
@@ -65,46 +65,53 @@
             "weeks-pos": "left"
         }
     },
+
     "cpu": {
         "interval": 5,
         "format": "󰍛  {usage}%",
         "tooltip": true,
         "on-click-right": "ghostty -e btop"
     },
+
     "memory": {
         "interval": 10,
         "format": "󰘚  {used:.1f}G",
         "tooltip": true,
         "on-click-right": "ghostty -e btop"
     },
+
     "network": {
         "interval": 2,
-        "format-wifi": "󰤨  {essid}",
-        "format-ethernet": "󰈀  Connected",
-        "format-disconnected": "󰤭  Offline",
-        "tooltip-format": "IP: {ipaddr}/{cidr}\nSignal: {signalStrength}%",
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤭",
+        "tooltip-format": "Interface: {ifname}\nIP: {ipaddr}/{cidr}\nSignal: {signalStrength}%\nSSID: {essid}\nSpeed: ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}",
         "on-click": "nm-connection-editor"
     },
+
     "bluetooth": {
         "format": "󰂯",
         "format-off": "󰂲",
         "format-disabled": "󰂲",
-        "format-connected": "󰂱  {num_connections}",
-        "tooltip-format": "Bluetooth\nDevices: {num_connections}",
+        "format-connected": "󰂱",
+        "tooltip-format": "Bluetooth\nDevices connected: {num_connections}",
         "on-click": "~/.local/bin/bluetooth-toggle.sh toggle",
         "on-click-right": "blueman-manager"
     },
+
     "pulseaudio": {
         "format": "{icon}  {volume}%",
-        "format-muted": "󰝟  muted",
+        "format-muted": "󰝟",
         "format-icons": {
             "default": ["󰕿", "󰖀", "󰕾"]
         },
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
         "on-click-right": "pavucontrol",
         "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
-        "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-"
+        "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-",
+        "tooltip-format": "Volume: {volume}%\n{desc}"
     },
+
     "backlight": {
         "device": "intel_backlight",
         "format": "{icon}  {percent}%",
@@ -112,6 +119,7 @@
         "on-scroll-up": "brightnessctl set 5%+",
         "on-scroll-down": "brightnessctl set 5%-"
     },
+
     "battery": {
         "states": {
             "good": 80,
@@ -122,17 +130,22 @@
         "format-charging": "󰂄  {capacity}%",
         "format-plugged": "󰂄  {capacity}%",
         "format-alt": "{time}  {icon}",
-        "format-icons": ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+        "format-icons": ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Battery: {capacity}%\n{timeTo}"
     },
+
     "tray": {
         "icon-size": 16,
-        "spacing": 8
+        "spacing": 8,
+        "show-passive-items": false
     },
+
     "custom/lock": {
         "format": "󰌾",
         "tooltip": false,
         "on-click": "hyprlock"
     },
+
     "custom/power": {
         "format": "⏻",
         "tooltip": false,
