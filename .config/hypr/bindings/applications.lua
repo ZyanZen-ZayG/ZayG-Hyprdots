@@ -12,7 +12,7 @@ hl.bind("SUPER + F", hl.dsp.exec_cmd(vars.fileManager),    { description = "File
 hl.bind("SUPER + A", hl.dsp.exec_cmd(vars.menu),           { description = "App Launcher" })
 
 hl.bind("SUPER + E", hl.dsp.exec_cmd("sh -c 'jome -d | wl-copy'"),                                              { description = "Emoji Picker" })
-hl.bind("SUPER + V", hl.dsp.exec_cmd("sh -c 'cliphist list | rofi --show dmenu | cliphist decode | wl-copy'"),  { description = "Clipboard Manager" })
+hl.bind("SUPER + V", hl.dsp.exec_cmd("sh -c 'cliphist list | rofi -dmenu | cliphist decode | wl-copy'"),  { description = "Clipboard Manager" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("sh -c '" .. vars.colorPicker .. " | wl-copy'"),                           { description = "Color Picker" })
 
 hl.bind("SUPER + ALT + W", hl.dsp.exec_cmd(vars.waydroid), { description = "Waydroid" })
