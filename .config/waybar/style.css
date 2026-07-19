@@ -21,7 +21,7 @@ window#waybar {
     border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 24px; 
     padding: 4px 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
 }
 
 .modules-left { margin-right: 12px; }
@@ -67,7 +67,7 @@ window#waybar {
     padding: 4px 16px;
     margin: 0 6px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
 }
 
 #clock { color: #cba6f7; font-weight: 700; }
