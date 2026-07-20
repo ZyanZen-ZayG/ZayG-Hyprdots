@@ -12,3 +12,7 @@ hl.bind("SUPER + SHIFT + I", hl.dsp.exec_cmd(home .. "/.local/bin/toggle-idle.sh
 hl.bind("SUPER + D",         hl.dsp.exec_cmd(home .. "/.local/bin/notification-dismiss.sh"),    { description = "Dismiss Notifications" })
 hl.bind("SUPER + F10",       hl.dsp.exec_cmd(home .. "/.local/bin/audio-switch.sh"),            { description = "Switch Audio Output" })
 hl.bind("SUPER + slash",     hl.dsp.exec_cmd(home .. "/.local/bin/show-keybindings.sh"),        { description = "Show Keybindings" })
+-- Wallpaper System Controls
+hl.bind("SUPER + ALT + B",   hl.dsp.exec_cmd(home .. "/.local/bin/wallpaper-manager.sh toggle"),      { description = "Toggle Static/Video Mode" })
+hl.bind("SUPER + ALT + V",   hl.dsp.exec_cmd(home .. "/.local/bin/video-wallpaper-picker.sh"),        { description = "Open Video Wallpaper Picker" })
+hl.bind("SUPER + ALT + S",   hl.dsp.exec_cmd(home .. "/.local/bin/static-wallpaper-picker.sh"),       { description = "Open Static Wallpaper Picker" })
