@@ -414,6 +414,13 @@ echo -e "${GREEN}Theme initialized${NC}"
 mkdir -p ~/Videos
 mkdir -p ~/Pictures
 
+# Custom Wallpaper System Directories
+echo -e "${YELLOW}Creating Wallpaper Directories...${NC}"
+mkdir -p "$HOME/.config/wallpapers"
+mkdir -p "$HOME/.config/video-wallpapers"
+mkdir -p "$HOME/.cache/static_wallpaper_thumbs"
+mkdir -p "$HOME/.cache/video_wallpaper_thumbs"
+
 echo -e "${YELLOW}Configuring shell integration...${NC}"
 if [ -f "$HOME/.local/bin/terminal.sh" ]; then
     bash "$HOME/.local/bin/terminal.sh" || true
@@ -822,6 +829,13 @@ echo -e "${GREEN}Theme initialized${NC}"
 
 mkdir -p ~/Videos
 mkdir -p ~/Pictures
+
+# Custom Wallpaper System Directories
+echo -e "${YELLOW}Creating Wallpaper Directories...${NC}"
+mkdir -p "$HOME/.config/wallpapers"
+mkdir -p "$HOME/.config/video-wallpapers"
+mkdir -p "$HOME/.cache/static_wallpaper_thumbs"
+mkdir -p "$HOME/.cache/video_wallpaper_thumbs"
 
 echo -e "${YELLOW}Configuring shell integration...${NC}"
 if [ -f "$HOME/.local/bin/terminal.sh" ]; then
@@ -1238,6 +1252,13 @@ echo -e "${GREEN}Theme initialized${NC}"
 
 mkdir -p ~/Videos
 mkdir -p ~/Pictures
+
+# Custom Wallpaper System Directories
+echo -e "${YELLOW}Creating Wallpaper Directories...${NC}"
+mkdir -p "$HOME/.config/wallpapers"
+mkdir -p "$HOME/.config/video-wallpapers"
+mkdir -p "$HOME/.cache/static_wallpaper_thumbs"
+mkdir -p "$HOME/.cache/video_wallpaper_thumbs"
 
 echo -e "${YELLOW}Configuring shell integration...${NC}"
 if [ -f "$HOME/.local/bin/terminal.sh" ]; then
@@ -1665,6 +1686,13 @@ echo -e "${GREEN}Theme initialized${NC}"
 
 mkdir -p ~/Videos
 mkdir -p ~/Pictures
+
+# Custom Wallpaper System Directories
+echo -e "${YELLOW}Creating Wallpaper Directories...${NC}"
+mkdir -p "$HOME/.config/wallpapers"
+mkdir -p "$HOME/.config/video-wallpapers"
+mkdir -p "$HOME/.cache/static_wallpaper_thumbs"
+mkdir -p "$HOME/.cache/video_wallpaper_thumbs"
 
 # Wire the shell-init script into the rc file for the user's actual login shell
 echo -e "${YELLOW}Configuring shell integration...${NC}"
