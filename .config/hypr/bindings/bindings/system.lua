@@ -1,0 +1,18 @@
+local vars = require("hypr.vars")
+local home = os.getenv("HOME")
+
+hl.bind("SUPER + X",         hl.dsp.exec_cmd(home .. "/.local/bin/hypr-logout.sh"),             { description = "Logout" })
+hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("hyprlock"),                                       { description = "Lock Screen" })
+hl.bind("SUPER + ESCAPE",    hl.dsp.exec_cmd(vars.powermenu),                                   { description = "Power Menu" })
+hl.bind("CTRL + ESCAPE",     hl.dsp.exec_cmd("sh -c 'killall waybar || uwsm app -- waybar'"),   { description = "Toggle Waybar" })
+hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd(home .. "/.local/bin/monitor-mirror-toggle.sh"),   { description = "Toggle Monitor Mirror" })
+hl.bind("SUPER + CTRL + V",  hl.dsp.exec_cmd(home .. "/.local/bin/virtual-mirror-toggle.sh"),   { description = "Toggle Virtual Mirror" })
+hl.bind("SUPER + N",         hl.dsp.exec_cmd(home .. "/.local/bin/toggle-nightlight.sh"),       { description = "Toggle Nightlight" })
+hl.bind("SUPER + SHIFT + I", hl.dsp.exec_cmd(home .. "/.local/bin/toggle-idle.sh"),             { description = "Toggle Idle Prevention" })
+hl.bind("SUPER + D",         hl.dsp.exec_cmd(home .. "/.local/bin/notification-dismiss.sh"),    { description = "Dismiss Notifications" })
+hl.bind("SUPER + F10",       hl.dsp.exec_cmd(home .. "/.local/bin/audio-switch.sh"),            { description = "Switch Audio Output" })
+hl.bind("SUPER + slash",     hl.dsp.exec_cmd(home .. "/.local/bin/show-keybindings.sh"),        { description = "Show Keybindings" })
+-- Wallpaper System Controls
+hl.bind("SUPER + ALT + B",   hl.dsp.exec_cmd(home .. "/.local/bin/wallpaper-manager.sh toggle"),      { description = "Toggle Static/Video Mode" })
+hl.bind("SUPER + ALT + V",   hl.dsp.exec_cmd(home .. "/.local/bin/video-wallpaper-picker.sh"),        { description = "Open Video Wallpaper Picker" })
+hl.bind("SUPER + ALT + S",   hl.dsp.exec_cmd(home .. "/.local/bin/static-wallpaper-picker.sh"),       { description = "Open Static Wallpaper Picker" })
