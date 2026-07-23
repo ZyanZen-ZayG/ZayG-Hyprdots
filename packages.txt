@@ -85,3 +85,4 @@ noto-fonts-emoji
 ffmpeg
 jq
 socat
+swww
